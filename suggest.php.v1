@@ -1,0 +1,79 @@
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST"){
+	$name = trim(filter_input(INPUT_POST, "name", FILTER_SANITIZE_STRING));
+	$email = trim(filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL));
+	$suggestion = trim(filter_input(INPUT_POST, "user_suggestion", FILTER_SANITIZE_SPECIAL_CHARS));
+	
+	if ($name == "" || $email == "" || $suggestion == ""){
+		
+		echo 'Please fill in all the required fields: Name, Email and Details!';
+		exit;
+	}
+	if ($_POST["address"] != ""){
+		
+		echo "Bad form input";
+		exit;
+	}
+
+	
+	require("inc/phpmailer/class.phpmailer.php");
+
+	$mail = new PHPMailer;
+	
+	if (!$mail->ValidateAddress($email)){
+		echo "Invalid Email Eddress";
+		exit;
+	}
+
+	header("location:suggest.php?status=thanks");
+}
+
+$pageTitle = "SwopMatch Handler | Suggest ";
+include("inc/header.php"); ?>
+<!DOCTYPE = html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/main.css">
+    <title><?php echo $pageTitle ?></title>
+	<link rel = "stylesheet" href = "style.css"> 
+  </head>
+
+  <body>
+	
+	  <?php if (isset($_GET["status"]) && $_GET["status"] == "thanks"){
+		  echo '<p>Thank you for the email! We will check your suggestion shortly!</p>';
+	  }else {?>
+	  <h1>Let Us Know Your Suggestions</h1>
+	  <form action = "suggest.php" method = "post">
+	  <fieldset>
+		<h5>Please type your suggestion below and click the Send Button to send us your suggestions</h5>
+		  <table>
+				<tr>
+					<th><label for = "name">Name:</label></th>
+					<td><input type = "text" id = "name" name = "name" value = "<?php if (isset($name)){echo $name; }?>"></td>
+				</tr>
+				<tr>
+					<th><label for = "email">Email:</label></th>
+					<td><input type = "text" id = "email" name = "email" value = "<?php if (isset($email)){echo $email; }?>"></td>
+				</tr>
+				<tr>
+					<th><label for = "user_suggestion">Suggestions:</label></th>
+					<td><textarea id = "user_suggestion" name = "user_suggestion"><?php if(isset($suggestion)){echo htmlspecialchars($_POST["user_suggestion"]);} ?></textarea></td>
+				</tr>
+				<tr style = "display:none">
+					<th><label for = "address">Address:</label></th>
+					<td><input type = "text" id = "address" name = "address"><p>Please leave this field blank</p></td>
+				</tr>
+		  
+		  </table>
+	  </fieldset>
+	  <button type = "submit" >Send</button>
+		
+	</form>
+	  <?php }?>
+  </body>
+  <?php include("inc/footer.php"); ?>

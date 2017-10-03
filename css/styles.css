@@ -1,0 +1,232 @@
+.prefButtons {
+    background-color:  #85a3e0;
+	border-radius: 5%;
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+	width: 100%;
+    display: inline-block;
+    font-size: 15px;
+}
+
+div.form{
+	
+	display: block;
+	margin: auto;
+    width: 40%;
+	
+}
+
+
+.form {
+	
+	display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	background-color:  #e6f5ff;
+	border-radius: 3%;
+	min-width: 500px;
+
+}
+
+
+h1 {
+	
+	text-align: center;
+	font-size: 2em;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.number {
+	
+	background-color: #85a3e0;
+	color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.9em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 5px;
+  width: 90%;
+  background-color: #e8eeef;
+  color: *#8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 10px;
+} 
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 4px 0;
+
+}
+
+#button, #suggestsubmit {
+	
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #85a3e0;
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #85a3e0;
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+
+#reset{
+	
+  padding: 10px 10px 10px 10px;
+  color: #FFF;
+  background-color: #85a3e0;
+  font-size: 12px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 10%;
+  border: 1px solid #85a3e0;
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin: auto;
+}
+
+legend {
+  
+  font-size: 1.4em;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#light {
+  font-weight: 600;
+  display: inline;
+}
+
+hr {
+	
+	width: 100%;
+	height: 3px;
+	background: #85a3e0;
+	border: none;
+}
+
+.message {
+	background-color:#ed5a5a;
+	border-radius:4px;
+	padding:1.5rem;
+	color:#fff;
+		
+	}
+
+.error {
+	margin: auto;
+}
+
+fieldset {
+	
+	border-style: hidden;
+}
+
+.table {
+	
+	width: 100%;
+	white-space: normal;
+	line-height: normal;
+	font-size: medium;
+	font-style: normal;
+	border-collapse: separate;
+}
+
+
+th {
+	
+	text-align: left;
+}
+
+a:link {
+    /*background-color:  #85a3e0; */
+    color: white;
+    padding: 3px 10px;
+    text-align: center; 
+    text-decoration: none;
+    display: inline-block;
+	border-radius: 5%;
+	width: 15%;
+	
+}
+
+
+a:hover, a:active {
+    background-color: grey;
+}
+
+.menu ul{
+	
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: block;
+}
+
+.menu li{
+	
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+#mainlinks {
+	
+	font-size: 1.2em;
+}
+
+.section {
+	background-color:#527a7a;
+	text-align: center;
+	max-width: 800;
+	margin: auto;	
+}
+
+#sitename {
+	
+	font-style: georgian;
+	font-size: 3em;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.hidden {
+	
+	border-style: hidden;
+	border-radius: 10px;
+}
