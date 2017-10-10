@@ -1,31 +1,20 @@
 <?php
 
-if (empty($error_message) && isset($_POST["preferred_schools8"]) && !empty($prefSchools7)){
-				$prefSchools8 = $_POST["preferred_schools8"];
-				
-				foreach($schools as $key=>$value){
-					if(in_array($prefSchools8,$value)){
-						  $prefSchool8_id = $value['school_id'];
-					}
-				}
-			}elseif (empty($error_message) && isset($_POST["preferred_schools8"]) && empty($prefSchools7)){
-				$error_message = 'You can not choose Schools eighth option without choosing a seventh option';
-			}
+include 'functions.php';
+        
       
+      $matched = [];
+      
+     foreach($matched_curr_schools as $curr_key=>$curr_value){
+       if(in_array($matched_schools1[1]['mps_school_id'], $curr_value)){
+         $matched[] = $matched_schools1[1]['mps_client_ec_no'];
+         unset($matched_curr_schools[$curr_key]);
+       }
+      }   
+        
   
-  if (isset($_GET['id'])){
-    $match_ec_no = $_GET['id'];
-    foreach($mpp as $key=>$value){
-      if(in_array($match_ec_no,$value)){
-          $pref_province_id = $value['[mpp_province_id]'];
-          foreach($provinces as $key=>$value){
-            if(in_array($pref_province_id,$value)){
-              $pref_province_name = $value['province_name'];
-          }
-        }
-      }
-    }
-  }
-  
+   echo '<pre>';
+  print_r($matched);
+  echo '</pre>';
   
 ?>
