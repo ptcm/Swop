@@ -1,4 +1,9 @@
 <?php
+
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('html_errors', 1);
+
 session_start();
 
 include 'inc/functions.php';
@@ -21,6 +26,7 @@ $userFirstName = $userLastName = $ecNumber = $gender = $mobileNumber = $userEmai
         $mpt_town_name =
         $pref_town_name =
         $pref_distr_name =
+        $prefProv_id =
         $pref_province_name =
         $pref_location_name =
         $curr_distr_name =
@@ -52,33 +58,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 	}
 
 
-	 $userFirstName = trim(filter_input(INPUT_POST, "user_first_name", FILTER_SANITIZE_STRING));
+	 $userFirstName = trim(filter_input(INPUT_POST, 'user_first_name', FILTER_SANITIZE_STRING));
 
 	 if(isset($_POST['user_first_name'])){
 		 $_SESSION['user_first_name'][$userFirstName] = filter_input(INPUT_POST, 'user_first_name', FILTER_SANITIZE_STRING);
 	}
-	 $userLastName = trim(filter_input(INPUT_POST, "user_last_name", FILTER_SANITIZE_STRING));
+	 $userLastName = trim(filter_input(INPUT_POST, 'user_last_name', FILTER_SANITIZE_STRING));
 
 	 if(isset($_POST['user_last_name'])){
 		 $_SESSION['user_last_name'][$userLastName] = filter_input(INPUT_POST, 'user_last_name', FILTER_SANITIZE_STRING);
 	}
-	 $mobileNumber = trim(filter_input(INPUT_POST, "mobile_number", FILTER_SANITIZE_NUMBER_INT));
+	 $mobileNumber = trim(filter_input(INPUT_POST, 'mobile_number', FILTER_SANITIZE_NUMBER_INT));
 
 	 if(isset($_POST['mobile_number'])){
 		 $_SESSION['mobile_number'][$mobileNumber] = filter_input(INPUT_POST, 'mobile_number', FILTER_SANITIZE_NUMBER_INT);
 	}
-	 $ecNumber = trim(filter_input(INPUT_POST, "ec_number", FILTER_SANITIZE_STRING));
+	 $ecNumber = trim(filter_input(INPUT_POST, 'ec_number', FILTER_SANITIZE_STRING));
 
 	 if(isset($_POST['mobile_number'])){
 		 $_SESSION['mobile_number'][$mobileNumber] = filter_input(INPUT_POST, 'mobile_number', FILTER_SANITIZE_NUMBER_INT);
 	}
 
-	 $userEmail = trim(filter_input(INPUT_POST, "user_email", FILTER_SANITIZE_EMAIL));
+	 $userEmail = trim(filter_input(INPUT_POST, 'user_email', FILTER_SANITIZE_EMAIL));
 
 	 if(isset($_POST['user_email'])){
 		 $_SESSION['user_email'][$userEmail] = filter_input(INPUT_POST, 'user_email', FILTER_SANITIZE_EMAIL);
 	}
-	 $userPassword = trim($_POST["user_password"]);
+	 $userPassword = trim($_POST['user_password']);
 
 	 if(isset($_POST['user_email'])){
 		 $_SESSION['user_password'][$userPassword] = $_POST['user_password'];
@@ -741,7 +747,7 @@ if (isset($_POST["subject33"])){
 if (empty($error_message) && isset($_POST["preferred_province"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))){
-		//include('inc/selected_subs.php');
+		include('inc/selected_subs.php');
 		client_pref_prov($prefProv_id, $ecNumber);
 	}else if(empty($error_message) && !empty($_POST["preferred_province"])){
 		client_pref_prov($prefProv_id, $ecNumber, $levelTaught);
@@ -925,18 +931,17 @@ if (empty($error_message) && isset($_POST["preferred_schools10"]) && (($_POST["l
 
 	//inserts a client into the clients database if there is no error in the form
 	if (empty($error_message)){
-		create_client($ecNumber,
-						$userFirstName,
-						$userLastName,
-						$gender,
-						$mobileNumber,
-						$userEmail,
-						$userPassword,
-						$levelTaught,
-						$dateCreated,
-						$status,
-						$dateMatched,
-            $client_id);
+		create_client($ecNumber, 
+						$userFirstName, 
+						$userLastName, 
+						$gender, 
+						$mobileNumber, 
+						$userEmail, 
+						$userPassword, 
+						$levelTaught, 
+						$dateCreated, 
+						$status, 
+						$dateMatched);
 	}
 
 	//inserts a record into the current schools database if there is no error in the form
@@ -1263,19 +1268,19 @@ if(isset($_GET['id'])){
 */
 
 echo "<pre>";
-//var_dump($mpd_id1);
+//var_dump($sub1_id);
 echo "</pre>";
 echo "<pre>";
-print_r($currProv_id);
+//print_r($sub2_id);
 echo "</pre>";
 echo "<pre>";
-var_dump($currDistr_id);
+//print_r($e);
 echo "</pre>";
 echo "<pre>";
-print_r($sub1_id).'<br>';
+//print_r($sql_updates_mcs).'<br>';
 echo "</pre>";
 echo "<pre>";
-var_dump($levelTaught).'<br>';
+//print_r(error_get_last());
 echo "</pre>";
 
 
@@ -1291,23 +1296,26 @@ echo "</pre>";
     <link rel = "stylesheet" href = "css/styles.css">
   </head>
 
-  <body>
+  <body class = "body">
 
   <div class = "form" >
 	<?php if (isset($_GET["status"]) && $_GET["status"] == "thanks"){
 		  echo '<p>Thank you for registering with us! We will contact you as soon as a match is found!</p>';
 		  exit;
 	  }elseif(!empty($error_message)){
-        echo '<div class = "hidden section message">';
+        echo '<div class = "hidden message">';
         echo '<span class = "error">'.$error_message.'</span>';
         echo '</div>';
 			}elseif(!empty($client_ec_no)){
             echo '<h1> Update ';
       }else{
         echo '<h1>Register ';
-      }?> Client!</h1>
+      } 
+      if(empty($error_message)){
+        echo 'Client!';
+        }?></h1>
 
-		<form action = "Account_manage.php" method = "post">;
+		<form action = "Account_manage.php" method = "post">
 	  <fieldset>
 		<legend><span class = "number" >1</span>Your Preferred Station Details</legend>
 	      <table class = "table">
@@ -1323,9 +1331,11 @@ echo "</pre>";
 					</tr>
 				</table><br>
         <div id="provinces" <?php if($_SERVER["REQUEST_METHOD"] == "POST"){
-          if(isset($_POST['preferred_province'])){
+          if($_POST['preferred_province']){
             echo 'style = "display:block"';
-        }
+        }else{
+              echo 'style = "display:none"';
+              }
         }elseif(!empty($mpp_id)){
               echo 'style = "display:block"';
             }else{
@@ -1345,7 +1355,9 @@ echo "</pre>";
 				<div id="districts" <?php  if($_SERVER["REQUEST_METHOD"] == "POST"){
 									if(isset($_POST['preferred_district1'])){
 										echo 'style = "display:block"';
-										}
+										}else{
+											echo 'style = "display:none"';
+                      }
                     }elseif($mpd_id){
                       echo 'style = "display:block"';
                     }else{ 
@@ -1364,7 +1376,7 @@ echo "</pre>";
            </tr>
            <tr>
              <th>Option 2</th>
-             <td><select id="preferred_district2" name="preferred_district2" class="mySelect" disabled>
+             <td><select id="preferred_district2" name="preferred_district2" class="mySelect" <?php if(!$mpd_distr_id){echo 'disabled';} ?>>
              <option value="" selected disabled>Please select one option -- (only if applicable)</option>
            <?php all_districts1($districts);?>
              </select></td>
@@ -1374,7 +1386,9 @@ echo "</pre>";
 				<div id="towns" <?php if($_SERVER["REQUEST_METHOD"] == "POST"){
 									if(isset($_POST['preferred_town'])){
 										echo 'style = "display:block"';
-										}
+										}else{
+											echo 'style = "display:none"';
+                      }
                 }elseif($mpt_town_id){
                       echo 'style = "display:block"';
                 }else{
@@ -1397,7 +1411,9 @@ echo "</pre>";
 				<div id="locations" <?php if($_SERVER["REQUEST_METHOD"] == "POST"){
 									if(isset($_POST['preferred_location1'])){
 										echo 'style = "display:block"';
-										}
+										}else{
+											echo 'style = "display:none"';
+                      }
                     }elseif($mpl_id){
                       echo 'style = "display:block"';
                     }else{
@@ -1414,14 +1430,14 @@ echo "</pre>";
            </tr>
            <tr id = 'loc2'>
              <th>Option 2</th>
-             <td><select id="loc_name2" name="preferred_location2" onchange="prefLocs1()" disabled class="mySelect">
+             <td><select id="loc_name2" name="preferred_location2" onchange="prefLocs1()" <?php if(!$mpl_loc_id){echo 'disabled';} ?> class="mySelect">
              <option value="" selected disabled>Please select another option -- (only if applicable)</option>
             <?php all_locations1($locations);?>
              </select></td>
            </tr>
            <tr id = "loc3">
              <th>Option 3</th>
-             <td><select id="loc_name3" name="preferred_location3" class="mySelect" disabled>
+             <td><select id="loc_name3" name="preferred_location3" class="mySelect" <?php if(!$mpl_loc_id){echo 'disabled';} ?>>
              <option value="" selected disabled>Please select another option -- (only if applicable)</option>
             <?php all_locations2($locations);?>
              </select></td>
@@ -1431,7 +1447,9 @@ echo "</pre>";
 				<div id="specific_schs" <?php if($_SERVER["REQUEST_METHOD"] == "POST"){
 									if(isset($_POST['preferred_schools1'])){
 										echo 'style = "display:block"';
-										}
+										}else{
+											echo 'style = "display:none"';
+                      }
                     }elseif($mps_id){
                       echo 'style = "display:block"';
                     }else{
@@ -1443,70 +1461,70 @@ echo "</pre>";
            <tr>
              <th>Option 1</th>
              <td><select id="preferred_schools1" name="preferred_schools1" onchange="preSch()" class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
            <?php all_schools($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 2</th>
-             <td><select id="preferred_schools2" name="preferred_schools2" onchange="preSch1()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools2" name="preferred_schools2" onchange="preSch1()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
            <?php all_schools1($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 3</th>
-             <td><select id="preferred_schools3" name="preferred_schools3" onchange="preSch2()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools3" name="preferred_schools3" onchange="preSch2()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
            <?php all_schools2($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 4</th>
-             <td><select id="preferred_schools4" name="preferred_schools4" onchange="preSch3()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools4" name="preferred_schools4" onchange="preSch3()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
           <?php all_schools3($schools);?>
            </select></td>
            </tr>
            <tr>
              <th>Option 5</th>
-             <td><select id="preferred_schools5" name="preferred_schools5" onchange="preSch4()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools5" name="preferred_schools5" onchange="preSch4()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
            <?php all_schools4($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 6</th>
-             <td><select id="preferred_schools6" name="preferred_schools6" onchange="preSch5()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools6" name="preferred_schools6" onchange="preSch5()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
           <?php	all_schools5($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 7</th>
-             <td><select id="preferred_schools7" name="preferred_schools7" onchange="preSch6()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools7" name="preferred_schools7" onchange="preSch6()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
           <?php	all_schools6($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 8</th>
-             <td><select id="preferred_schools8" name="preferred_schools8" onchange="preSch7()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools8" name="preferred_schools8" onchange="preSch7()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
           <?php	all_schools7($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 9</th>
-             <td><select id="preferred_schools9" name="preferred_schools9" onchange="preSch8()" disabled class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools9" name="preferred_schools9" onchange="preSch8()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
           <?php	all_schools8($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 10</th>
-             <td><select id="preferred_schools10" name="preferred_schools10" " class="mySelect">
-             <option selected disabled>Please select one option -- (only if applicable)</option>
+             <td><select id="preferred_schools10" name="preferred_schools10" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
+             <option value="" selected>Please select one option -- (only if applicable)</option>
           <?php	all_schools9($schools);?>
              </select></td>
            </tr>
@@ -1564,7 +1582,7 @@ echo "</pre>";
                                                                                       echo $client_ec_no;
                                                                                       }else{
                                                                                       echo htmlspecialchars($ecNumber);
-                                                                                      }?>"<?php
+                                                                                      }?>"<?php 
                                                                                       if(!empty($client_ec_no)){//turns the html attribute to read only to avoid changing the EC Number
                                                                                         echo 'readonly';
                                                                                       }?>></td>
@@ -1742,7 +1760,7 @@ echo "</pre>";
       </table>
 		  </div>
 		</fieldset>
-    <?php if(!empty($client_id)){
+    <?php if($client_id){
                 echo '<input type="hidden" value="'.$client_id.'"/>';
           }
           if(!empty($mpp_id)){
@@ -1751,51 +1769,51 @@ echo "</pre>";
           if(!empty($mpt_id)){
                 echo '<input type="hidden" value="'.$mpt_id.'"/>';
           }
-          if(isset($mpd_id1)){
-                echo '<input type="hidden" value="'.$mpd_id1.'"/>';
+          if(isset($mpd_id)){
+                echo '<input type="hidden" value="'.$mpd_id.'"/>';
           }
-          if(isset($mpd_id2)){
-                echo '<input type="hidden" value="'.$mpd_id2.'"/>';
+          if(isset($mpd2_id)){
+                echo '<input type="hidden" value="'.$mpd2_id.'"/>';
           }
-          if(isset($mpl[0]['mpl_id'])){
-                echo '<input type="hidden" value="'.$mpl[0]['mpl_id'].'"/>';
+          if(!empty($mpl_id)){
+                echo '<input type="hidden" value="'.$mpl_id.'"/>';
           }
 
-          if(isset($mpl[1]['mpl_id'])){
-                echo '<input type="hidden" value="'.$mpl[1]['mpl_id'].'"/>';
+          if(!empty($mpl2_id)){
+                echo '<input type="hidden" value="'.$mpl2_id.'"/>';
           }
-          if(isset($mpl[2]['mpl_id'])){
-                echo '<input type="hidden" value="'.$mpl[2]['mpl_id'].'"/>';
+          if(!empty($mpl3_id)){
+                echo '<input type="hidden" value="'.$mpl3_id.'"/>';
           }
-          if(isset($mps[0]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[0]['mps_id'].'"/>';
+          if(!empty($mps_id)){
+                echo '<input type="hidden" value="'.$mps_id.'"/>';
           }
-          if(isset($mps[1]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[1]['mps_id'].'"/>';
+          if(!empty($mps2_id)){
+                echo '<input type="hidden" value="'.$mps2_id.'"/>';
           }
-          if(isset($mps[2]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[2]['mps_id'].'"/>';
+          if(!empty($mps3_id)){
+                echo '<input type="hidden" value="'.$mps3_id.'"/>';
           }
-          if(isset($mps[3]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[3]['mps_id'].'"/>';
+          if(!empty($mps4_id)){
+                echo '<input type="hidden" value="'.$mps4_id.'"/>';
           }
-          if(isset($mps[4]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[4]['mps_id'].'"/>';
+          if(!empty($mps5_id)){
+                echo '<input type="hidden" value="'.$mps5_id.'"/>';
           }
-          if(isset($mps[5]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[5]['mps_id'].'"/>';
+          if(!empty($mps6_id)){
+                echo '<input type="hidden" value="'.$mps6_id.'"/>';
           }
-          if(isset($mps[6]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[6]['mps_id'].'"/>';
+          if(!empty($mps7_id)){
+                echo '<input type="hidden" value="'.$mps7_id.'"/>';
           }
-          if(isset($mps[7]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[7]['mps_id'].'"/>';
+          if(!empty($mps8_id)){
+                echo '<input type="hidden" value="'.$mps8_id.'"/>';
           }
-          if(isset($mps[8]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[8]['mps_id'].'"/>';
+          if(!empty($mps9_id)){
+                echo '<input type="hidden" value="'.$mps9_id.'"/>';
           }
-          if(isset($mps[9]['mps_id'])){
-                echo '<input type="hidden" value="'.$mps[9]['mps_id'].'"/>';
+          if(!empty($mps10_id)){
+                echo '<input type="hidden" value="'.$mps10_id.'"/>';
           }
 
     ?>
