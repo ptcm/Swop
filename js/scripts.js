@@ -1,4 +1,7 @@
-		
+	alert("welcomeToSwopMatchHandle!");
+	var visitorName = prompt('what is your name?');
+	consol.log(visitorName);	
+	
 	function prefDistricts(){
 			if(document.getElementById("preferred_district1").value != ""){
 				document.getElementById("preferred_district2").disabled = false;
