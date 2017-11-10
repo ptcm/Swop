@@ -210,7 +210,7 @@ if (isset($_POST["preferred_district2"])){
 
 	if ($userFirstName == "" || $userLastName == "" || $ecNumber == "" || $mobileNumber == ""){
 
-		$error_message = 'Please fill in all your Basic Details!';
+		$error_message = 'Whoa! Please fill in all your Basic Details!';
 
 	}
 
@@ -690,54 +690,46 @@ if (isset($_POST["subject33"])){
 									empty($_POST["preferred_district1"]) &&
 									empty($_POST["preferred_location1"]) &&
 									empty($_POST["preferred_schools1"])){
-		$error_message = 'Invalid form input: Please select your preferances for relocation first';
+		$error_message = 'Whoa! Invalid form input: Please select your preferences for relocation first';
 	}
 
 	//checks for duplicated preferred locations options and returns an error if any are found
 	if(count($unique_pref_locations) != count(array_unique($unique_pref_locations))){
-	  $error_message = 'Invalid form input: Preferred Locations options must be all unique! Please recheck your preferred locations options';
+	  $error_message = 'Whoa! Invalid form input: Preferred Locations options must be all unique! Please recheck your preferred locations options';
 	}
 
 	//checks for duplicated preferred schools options and returns an error if any are found
 	if(count($unique_pref_schools) != count(array_unique($unique_pref_schools))){
-	  $error_message = 'Invalid form input: Preferred Schools options must all be unique! Please recheck your preferred schools options.';
+	  $error_message = 'Whoa! Invalid form input: Preferred Schools options must all be unique! Please recheck your preferred schools options.';
 	}
 
 	//checks if the preferred province is unique from the current province and returns error if not unique
 	if (empty($error_message) && isset($_POST["preferred_province"]) && $_POST["preferred_province"] == $_POST["current_province"]){
-		$error_message = 'Invalid form input: Preferred Province may not be the same as Current Province';
+		$error_message = 'Whoa! Invalid form input: Preferred Province may not be the same as Current Province';
 	}
 
 	//checks for duplicated preferred districts options and returns an error if any are found
 	if (empty($error_message) && (isset($_POST["preferred_district1"]) && isset($_POST["preferred_district2"])) &&
 			(($_POST["preferred_district1"] == $_POST["preferred_district2"]))){
-		$error_message = 'Invalid form input: Both Preferred District Options may not refer to the same District name';
+		$error_message = 'Whoa! Invalid form input: Both Preferred District Options may not refer to the same District name';
 	}
 
 	//checks if the preferred district is unique from the current district and returns error if not unique
 	if (empty($error_message) && (isset($_POST["preferred_district1"]) || isset($_POST["preferred_district2"])) &&
-			(($_POST["preferred_district1"] == $_POST["current_district"] || $_POST["preferred_district2"] == $_POST["current_district"]))){
-		$error_message = 'Invalid form input: Preferred District may not be the same as Current District';
+			(($_POST["preferred_district1"] == $_POST["current_district"] || isset($_POST["preferred_district2"]) == $_POST["current_district"]))){
+		$error_message = 'Whoa! Invalid form input: Preferred District may not be the same as Current District';
 	}
-
-	//checks if the preferred school(s) is/are unique from the current school(s) and returns error if not unique
-	/*if (empty($error_message) && (isset($_POST["preferred_schools1"]) || isset($_POST["preferred_schools2"]) ||
-			isset($_POST["preferred_schools3"]) || isset($_POST["preferred_schools4"]) ||
-			isset($_POST["preferred_schools5"]) || isset($_POST["preferred_schools6"]) ||
-			isset($_POST["preferred_schools7"]) || isset($_POST["preferred_schools8"]) ||
-			isset($_POST["preferred_schools9"]) || isset($_POST["preferred_schools10"])) &&
-			(($_POST["preferred_schools1"] == $_POST["current_school"] ||
-				$_POST["preferred_schools2"] == $_POST["current_school"] ||
-				$_POST["preferred_schools3"] == $_POST["current_school"] ||
-				$_POST["preferred_schools4"] == $_POST["current_school"] ||
-				$_POST["preferred_schools5"] == $_POST["current_school"] ||
-				$_POST["preferred_schools6"] == $_POST["current_school"] ||
-				$_POST["preferred_schools7"] == $_POST["current_school"] ||
-				$_POST["preferred_schools8"] == $_POST["current_school"] ||
-				$_POST["preferred_schools9"] == $_POST["current_school"] ||
-				$_POST["preferred_schools10"] == $_POST["current_school"]))){
-		$error_message = 'Invalid form input: Preferred School may not be the same as Current School';
-	} */
+  
+  //the below checks whether for high school options subjects are selected. If not selected an error is thrown.
+     if (empty($error_message) && 
+      (($_POST["level_taught"] == "High School - ZJC") ||
+      ($_POST["level_taught"] == "High School - O Level")||
+      ($_POST["level_taught"] == "High School - A Level"))){
+        include_once('inc/selected_subs.php');
+        if(empty($subs)){
+          $error_message = 'Whoa! Invalid form input: Please select at least one subject that you specialize in teaching.';
+        }
+      }
 
 		$dateCreated = date('d-m-Y H:i:s');
 		$status = "OPEN";
@@ -747,7 +739,7 @@ if (isset($_POST["subject33"])){
 if (empty($error_message) && isset($_POST["preferred_province"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_prov($prefProv_id, $ecNumber);
 	}else if(empty($error_message) && !empty($_POST["preferred_province"])){
 		client_pref_prov($prefProv_id, $ecNumber, $levelTaught);
@@ -756,7 +748,7 @@ if (empty($error_message) && isset($_POST["preferred_province"]) && (($_POST["le
 if (empty($error_message) && isset($_POST["preferred_town"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 										($_POST["level_taught"] == "High School - O Level")||
 										($_POST["level_taught"] == "High School - A Level"))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_town($prefTown_id, $ecNumber);
 	}else if(empty($error_message) && !empty($_POST["preferred_town"])){
 		client_pref_town($prefTown_id, $ecNumber, $levelTaught);
@@ -765,7 +757,7 @@ if (empty($error_message) && isset($_POST["preferred_town"]) && (($_POST["level_
   if (empty($error_message) && isset($_POST["preferred_district1"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_distr1($prefDistr1_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_district1"])){
 		client_pref_distr1($prefDistr1_id, $ecNumber, $levelTaught);
@@ -774,17 +766,17 @@ if (empty($error_message) && isset($_POST["preferred_town"]) && (($_POST["level_
 if (empty($error_message) && isset($_POST["preferred_district2"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_distr2($prefDistr2_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_district2"]) && !empty($_POST["preferred_district1"])){
 		client_pref_distr2($prefDistr2_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_district2"]) && empty($_POST["preferred_district1"])){
-		$error_message = 'Invalid form input: You cannot select option 2 before option 1';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 2 before option 1';
 	}
 if (empty($error_message) && isset($_POST["preferred_location1"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_loc1($prefLoc1_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_location1"])){
 		client_pref_loc1($prefLoc1_id, $ecNumber, $levelTaught);
@@ -798,7 +790,7 @@ if (empty($error_message) && isset($_POST["preferred_location2"]) && (($_POST["l
 	}else if (empty($error_message) && !empty($_POST["preferred_location2"]) && !empty($_POST["preferred_location1"])){
 		client_pref_loc2($prefLoc2_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_location2"]) && empty($_POST["preferred_location1"])){
-		$error_message = 'Invalid form input: You cannot select option 2 before option 1';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 2 before option 1';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_location3"]) && (($_POST["level_taught"] == "High School - ZJC") ||
@@ -809,13 +801,13 @@ if (empty($error_message) && isset($_POST["preferred_location3"]) && (($_POST["l
 	}else if (empty($error_message) && !empty($_POST["preferred_location3"]) && !empty($_POST["preferred_location2"])){
 		client_pref_loc3($prefLoc3_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_location3"]) && empty($_POST["preferred_location2"])){
-		$error_message = 'Invalid form input: You cannot select option 3 before option 2';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 3 before option 2';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools1"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch1($prefSchool1_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools1"])){
 		client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught);
@@ -825,108 +817,108 @@ if (empty($error_message) && isset($_POST["preferred_schools2"]) && (($_POST["le
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											&& (!empty($_POST["preferred_schools1"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch2($prefSchool2_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools2"]) && !empty($_POST["preferred_schools1"])){
 		client_pref_sch1($prefSchool2_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools2"]) && empty($_POST["preferred_schools1"])){
-		$error_message = 'Invalid form input: You cannot select option 2 before option 1';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 2 before option 1';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools3"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											&& (!empty($_POST["preferred_schools2"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch3($prefSchool3_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools3"]) && !empty($_POST["preferred_schools2"])){
 		client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools3"]) && empty($_POST["preferred_schools2"])){
-		$error_message = 'Invalid form input: You cannot select option 3 before option 2';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 3 before option 2';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools4"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											 && (!empty($_POST["preferred_schools3"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch4($prefSchool4_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools4"]) && !empty($_POST["preferred_schools3"])){
 		client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools4"]) && empty($_POST["preferred_schools3"])){
-		$error_message = 'Invalid form input: You cannot select option 4 before option 3';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 4 before option 3';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools5"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											 && (!empty($_POST["preferred_schools4"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch5($prefSchool5_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools5"]) && !empty($_POST["preferred_schools4"])){
 		client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools5"]) && empty($_POST["preferred_schools4"])){
-		$error_message = 'Invalid form input: You cannot select option 5 before option 4';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 5 before option 4';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools6"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											 && (!empty($_POST["preferred_schools5"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch6($prefSchool6_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools6"]) && !empty($_POST["preferred_schools5"])){
 		client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools6"]) && empty($_POST["preferred_schools5"])){
-		$error_message = 'Invalid form input: You cannot select option 6 before option 5';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 6 before option 5';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools7"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											 && (!empty($_POST["preferred_schools6"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch7($prefSchool7_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools7"]) && !empty($_POST["preferred_schools6"])){
 		client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught);
 	}elseif (!empty($_POST["preferred_schools7"]) && empty($_POST["preferred_schools6"])){
-		$error_message = 'Invalid form input: You cannot select option 7 before option 6';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 7 before option 6';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools8"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											 && (!empty($_POST["preferred_schools7"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch8($prefSchool8_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools8"]) && !empty($_POST["preferred_schools7"])){
 		client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools8"]) && empty($_POST["preferred_schools7"])){
-		$error_message = 'Invalid form input: You cannot select option 8 before option 7';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 8 before option 7';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools9"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											 && (!empty($_POST["preferred_schools8"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch9($prefSchool9_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools9"]) && !empty($_POST["preferred_schools8"])){
 		client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools9"]) && empty($_POST["preferred_schools8"])){
-		$error_message = 'Invalid form input: You cannot select option 9 before option 8';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 9 before option 8';
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools10"]) && (($_POST["level_taught"] == "High School - ZJC") ||
 											($_POST["level_taught"] == "High School - O Level")||
 											($_POST["level_taught"] == "High School - A Level"))
 											 && (!empty($_POST["preferred_schools9"]))){
-		include('inc/selected_subs.php');
+		include_once('inc/selected_subs.php');
 		client_pref_sch10($prefSchool10_id, $ecNumber);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools10"]) && !empty($_POST["preferred_schools9"])){
 		client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools10"]) && empty($_POST["preferred_schools9"])){
-		$error_message = 'Invalid form input: You cannot select option 10 before option 9';
+		$error_message = 'Whoa! Invalid form input: You cannot select option 10 before option 9';
 	}
 
 	//inserts a client into the clients database if there is no error in the form
@@ -945,6 +937,7 @@ if (empty($error_message) && isset($_POST["preferred_schools10"]) && (($_POST["l
 	}
 
 	//inserts a record into the current schools database if there is no error in the form
+ 
 	if (empty($error_message)){
 		client_curr_sch($ecNumber, $currSch_id, $currDistr_id, $currProv_id, $levelTaught, $sub1_id, $sub2_id);
 		}
@@ -1271,7 +1264,7 @@ echo "<pre>";
 //var_dump($sub1_id);
 echo "</pre>";
 echo "<pre>";
-//print_r($sub2_id);
+//print_r($_POST);
 echo "</pre>";
 echo "<pre>";
 //print_r($e);
@@ -1282,7 +1275,7 @@ echo "</pre>";
 echo "<pre>";
 //print_r(error_get_last());
 echo "</pre>";
-
+//var_dump(isset($_POST["subject1"],$_POST["subject2"]));
 
 ?>
 
@@ -1331,7 +1324,7 @@ echo "</pre>";
 					</tr>
 				</table><br>
         <div id="provinces" <?php if($_SERVER["REQUEST_METHOD"] == "POST"){
-          if($_POST['preferred_province']){
+          if(isset($_POST['preferred_province'])){
             echo 'style = "display:block"';
         }else{
               echo 'style = "display:none"';
@@ -1346,7 +1339,7 @@ echo "</pre>";
            <tr>
              <th>Option</th>
              <td><select id="preferred_province" name="preferred_province" class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
            <?php all_provinces($provinces);?>
              </select></td>
            </tr>
@@ -1468,63 +1461,63 @@ echo "</pre>";
            <tr>
              <th>Option 2</th>
              <td><select id="preferred_schools2" name="preferred_schools2" onchange="preSch1()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
            <?php all_schools1($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 3</th>
              <td><select id="preferred_schools3" name="preferred_schools3" onchange="preSch2()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
            <?php all_schools2($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 4</th>
              <td><select id="preferred_schools4" name="preferred_schools4" onchange="preSch3()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
           <?php all_schools3($schools);?>
            </select></td>
            </tr>
            <tr>
              <th>Option 5</th>
              <td><select id="preferred_schools5" name="preferred_schools5" onchange="preSch4()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
            <?php all_schools4($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 6</th>
              <td><select id="preferred_schools6" name="preferred_schools6" onchange="preSch5()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
           <?php	all_schools5($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 7</th>
              <td><select id="preferred_schools7" name="preferred_schools7" onchange="preSch6()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
           <?php	all_schools6($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 8</th>
              <td><select id="preferred_schools8" name="preferred_schools8" onchange="preSch7()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
           <?php	all_schools7($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 9</th>
              <td><select id="preferred_schools9" name="preferred_schools9" onchange="preSch8()" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
           <?php	all_schools8($schools);?>
              </select></td>
            </tr>
            <tr>
              <th>Option 10</th>
              <td><select id="preferred_schools10" name="preferred_schools10" <?php if(!$mps_school_id){echo 'disabled';} ?> class="mySelect">
-             <option value="" selected>Please select one option -- (only if applicable)</option>
+             <option value="" selected disabled>Please select one option -- (only if applicable)</option>
           <?php	all_schools9($schools);?>
              </select></td>
            </tr>
@@ -1537,7 +1530,7 @@ echo "</pre>";
 		<legend><span class = "number" >2</span>Your Basic Information</legend>
 
 		<label class = "h2">Gender:</label>
-			<ul class="menu" id="gender">
+			<ul  class="menu" id="gender">
 				<li><label for="male" name="male" id="light">Male</label></li>
 				<li><input type="radio" id="male" value="Male" name="gender" <?php if(isset($_POST['gender'])){//for remembering data during registration
                                                                               if (($_POST['gender'] == 'Male')) echo 'checked';
@@ -1700,62 +1693,62 @@ echo "</pre>";
 										echo 'style = "display:none"';
 										}?>>
       <hr>
+      <legend><span class = "number" >4</span>Subjects Taught:</legend>
       <table class ="table">
-      <label class = "h2">Subjects Taught:</label>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject1" value="Additional Maths" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ADDITIONAL MATHS') || (strtoupper($match_sub2_name) == 'ADDITIONAL MATHS')){echo 'checked';}}elseif(isset($_POST['subject1'])){echo 'checked';}  ?>><label for="subject" name="subject" class="light">Additional Maths</label></td>
-        <td><input type="checkbox" id="subject" name="subject2" value="Art" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ART') || (strtoupper($match_sub2_name) == 'ART')){echo 'checked';}}else{echo (isset($_POST['subject2'])?'checked="checked"':'');}?>><label for="subject" name="subject" class="light">Art</label></td>
-        <td><input type="checkbox" id="subject" name="subject3" value="Biology" <?php  if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'BIOLOGY') || (strtoupper($match_sub2_name) == 'BIOLOGY')){echo 'checked';}}elseif(isset($_POST['subject3'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Biology</label></td>
+        <td><input type="checkbox" id="subject1" name="subject1" value="Additional Maths" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ADDITIONAL MATHS') || (strtoupper($match_sub2_name) == 'ADDITIONAL MATHS')){echo 'checked';}}elseif(isset($_POST['subject1'])){echo 'checked';}  ?>><label for="subject" name="subject" class="light">Additional Maths</label></td>
+        <td><input type="checkbox" id="subject2" name="subject2" value="Art" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ART') || (strtoupper($match_sub2_name) == 'ART')){echo 'checked';}}else{echo (isset($_POST['subject2'])?'checked="checked"':'');}?>><label for="subject" name="subject" class="light">Art</label></td>
+        <td><input type="checkbox" id="subject3" name="subject3" value="Biology" <?php  if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'BIOLOGY') || (strtoupper($match_sub2_name) == 'BIOLOGY')){echo 'checked';}}elseif(isset($_POST['subject3'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Biology</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject4" value="Business Studies" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'BUSINESS STUDIES') || (strtoupper($match_sub2_name) == 'BUSINESS STUDIES')){echo 'checked';}}elseif(isset($_POST['subject4'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Business Studies</label></td>
-        <td><input type="checkbox" id="subject" name="subject5" value="Chemistry" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'CHEMISTRY') || (strtoupper($match_sub2_name) == 'CHEMISTRY')){echo 'checked';}}elseif(isset($_POST['subject5'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Chemistry</label></td>
-        <td><input type="checkbox" id="subject" name="subject6" value="Commerce" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'COMMERCE') || (strtoupper($match_sub2_name) == 'COMMERCE')){echo 'checked';}}elseif(isset($_POST['subject6'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Commerce</label></td>
+        <td><input type="checkbox" id="subject4" name="subject4" value="Business Studies" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'BUSINESS STUDIES') || (strtoupper($match_sub2_name) == 'BUSINESS STUDIES')){echo 'checked';}}elseif(isset($_POST['subject4'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Business Studies</label></td>
+        <td><input type="checkbox" id="subject5" name="subject5" value="Chemistry" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'CHEMISTRY') || (strtoupper($match_sub2_name) == 'CHEMISTRY')){echo 'checked';}}elseif(isset($_POST['subject5'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Chemistry</label></td>
+        <td><input type="checkbox" id="subject6" name="subject6" value="Commerce" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'COMMERCE') || (strtoupper($match_sub2_name) == 'COMMERCE')){echo 'checked';}}elseif(isset($_POST['subject6'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Commerce</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject7" value="Computer Studies" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'COMPUTER STUDIES') || (strtoupper($match_sub2_id) == 'COMPUTER STUDIES')){echo 'checked';}}elseif(isset($_POST['subject7'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Computer Studies</label></td>
-        <td><input type="checkbox" id="subject" name="subject8" value="Economics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ECONOMICS') || (strtoupper($match_sub2_name) == 'ECONOMICS')){echo 'checked';}}elseif(isset($_POST['subject8'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Economics</label></td>
-        <td><input type="checkbox" id="subject" name="subject9" value="English Language" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ENGLISH LANGUAGE') || (strtoupper($match_sub2_name) == 'ENGLISH LANGUAGE')){echo 'checked';}}elseif(isset($_POST['subject9'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">English Language</label></td>
+        <td><input type="checkbox" id="subject7" name="subject7" value="Computer Studies" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'COMPUTER STUDIES') || (strtoupper($match_sub2_id) == 'COMPUTER STUDIES')){echo 'checked';}}elseif(isset($_POST['subject7'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Computer Studies</label></td>
+        <td><input type="checkbox" id="subject8" name="subject8" value="Economics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ECONOMICS') || (strtoupper($match_sub2_name) == 'ECONOMICS')){echo 'checked';}}elseif(isset($_POST['subject8'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Economics</label></td>
+        <td><input type="checkbox" id="subject9" name="subject9" value="English Language" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ENGLISH LANGUAGE') || (strtoupper($match_sub2_name) == 'ENGLISH LANGUAGE')){echo 'checked';}}elseif(isset($_POST['subject9'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">English Language</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject10" value="English Literature" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ENGLISH LITERATURE') || (strtoupper($match_sub2_name) == 'ENGLISH LITERATURE')){echo 'checked';}}elseif(isset($_POST['subject10'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">English Literature</label></td>
-        <td><input type="checkbox" id="subject" name="subject11" value="Fashion And Fabrics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'FASHION AND FABRICS') || (strtoupper($match_sub2_name) == 'FASHION AND FABRICS')){echo 'checked';}}elseif(isset($_POST['subject11'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Fashion And Fabrics</label></td>
-        <td><input type="checkbox" id="subject" name="subject12" value="Food And Nutrition" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'FOOD AND NUTRITION') || (strtoupper($match_sub2_name) == 'FOOD AND NUTRITION')){echo 'checked';}}elseif(isset($_POST['subject12'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Food And Nutrition</label></td>
+        <td><input type="checkbox" id="subject10" name="subject10" value="English Literature" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'ENGLISH LITERATURE') || (strtoupper($match_sub2_name) == 'ENGLISH LITERATURE')){echo 'checked';}}elseif(isset($_POST['subject10'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">English Literature</label></td>
+        <td><input type="checkbox" id="subject11" name="subject11" value="Fashion And Fabrics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'FASHION AND FABRICS') || (strtoupper($match_sub2_name) == 'FASHION AND FABRICS')){echo 'checked';}}elseif(isset($_POST['subject11'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Fashion And Fabrics</label></td>
+        <td><input type="checkbox" id="subject12" name="subject12" value="Food And Nutrition" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'FOOD AND NUTRITION') || (strtoupper($match_sub2_name) == 'FOOD AND NUTRITION')){echo 'checked';}}elseif(isset($_POST['subject12'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Food And Nutrition</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject13" value="French" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'FRENCH') || (strtoupper($match_sub2_name) == 'FRENCH')){echo 'checked';}}elseif(isset($_POST['subject13'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">French</label></td>
-        <td><input type="checkbox" id="subject" name="subject14" value="Geography" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'GEOGRAPHY') || (strtoupper($match_sub2_name) == 'GEOGRAPHY')){echo 'checked';}}elseif(isset($_POST['subject14'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Geography</label></td>
-        <td><input type="checkbox" id="subject" name="subject15" value="History" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'HISTORY') || (strtoupper($match_sub2_name) == 'HISTORY')){echo 'checked';}}elseif(isset($_POST['subject15'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">History</label></td>
+        <td><input type="checkbox" id="subject13" name="subject13" value="French" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'FRENCH') || (strtoupper($match_sub2_name) == 'FRENCH')){echo 'checked';}}elseif(isset($_POST['subject13'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">French</label></td>
+        <td><input type="checkbox" id="subject14" name="subject14" value="Geography" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'GEOGRAPHY') || (strtoupper($match_sub2_name) == 'GEOGRAPHY')){echo 'checked';}}elseif(isset($_POST['subject14'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Geography</label></td>
+        <td><input type="checkbox" id="subject15" name="subject15" value="History" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'HISTORY') || (strtoupper($match_sub2_name) == 'HISTORY')){echo 'checked';}}elseif(isset($_POST['subject15'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">History</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject16" value="Home Management" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'HOME MANAGEMENT') || (strtoupper($match_sub2_name) == 'HOME MANAGEMENT')){echo 'checked';}}elseif(isset($_POST['subject16'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Home Management</label></td>
-        <td><input type="checkbox" id="subject" name="subject17" value="Human And Social Biology" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'HUMAN AND SOCIAL BIOLOGY') || (strtoupper($match_sub2_name) == 'HUMAN AND SOCIAL BIOLOGY')){echo 'checked';}}elseif(isset($_POST['subject17'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Human And Social Biology</label></td>
-        <td><input type="checkbox" id="subject" name="subject18" value="Integrated Science" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'INTEGRATED SCIENCE') || (strtoupper($match_sub2_name) == 'INTEGRATED SCIENCE')){echo 'checked';}}elseif(isset($_POST['subject18'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Integrated Science</label></td>
+        <td><input type="checkbox" id="subject16" name="subject16" value="Home Management" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'HOME MANAGEMENT') || (strtoupper($match_sub2_name) == 'HOME MANAGEMENT')){echo 'checked';}}elseif(isset($_POST['subject16'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Home Management</label></td>
+        <td><input type="checkbox" id="subject17" name="subject17" value="Human And Social Biology" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'HUMAN AND SOCIAL BIOLOGY') || (strtoupper($match_sub2_name) == 'HUMAN AND SOCIAL BIOLOGY')){echo 'checked';}}elseif(isset($_POST['subject17'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Human And Social Biology</label></td>
+        <td><input type="checkbox" id="subject18" name="subject18" value="Integrated Science" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'INTEGRATED SCIENCE') || (strtoupper($match_sub2_name) == 'INTEGRATED SCIENCE')){echo 'checked';}}elseif(isset($_POST['subject18'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Integrated Science</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject19" value="Law" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'LAW') || (strtoupper($match_sub2_name) == 'LAW')){echo 'checked';}}elseif(isset($_POST['subject19'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Law</label></td>
-        <td><input type="checkbox" id="subject" name="subject20" value="Mathematics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'MATHEMATICS') || (strtoupper($match_sub2_name) == 'MATHEMATICS')){echo 'checked';}}elseif(isset($_POST['subject20'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Mathematics</label></td>
-        <td><input type="checkbox" id="subject" name="subject21" value="Metalwork" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'METALWORK') || (strtoupper($match_sub2_name) == 'METALWORK')){echo 'checked';}}elseif(isset($_POST['subject21'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Metalwork</label></td>
+        <td><input type="checkbox" id="subject19" name="subject19" value="Law" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'LAW') || (strtoupper($match_sub2_name) == 'LAW')){echo 'checked';}}elseif(isset($_POST['subject19'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Law</label></td>
+        <td><input type="checkbox" id="subject20" name="subject20" value="Mathematics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'MATHEMATICS') || (strtoupper($match_sub2_name) == 'MATHEMATICS')){echo 'checked';}}elseif(isset($_POST['subject20'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Mathematics</label></td>
+        <td><input type="checkbox" id="subject21" name="subject21" value="Metalwork" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'METALWORK') || (strtoupper($match_sub2_name) == 'METALWORK')){echo 'checked';}}elseif(isset($_POST['subject21'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Metalwork</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject22" value="Music" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'MUSIC') || (strtoupper($match_sub2_name) == 'MUSIC')){echo 'checked';}}elseif(isset($_POST['subject22'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Music</label></td>
-        <td><input type="checkbox" id="subject" name="subject23" value="Ndebele" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'NDEBELE') || (strtoupper($match_sub2_name) == 'NDEBELE')){echo 'checked';}}elseif(isset($_POST['subject23'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Ndebele</label></td>
-        <td><input type="checkbox" id="subject" name="subject24" value="Physical Science" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'PHYSICAL SCIENCE') || (strtoupper($match_sub2_name) == 'PHYSICAL SCIENCE')){echo 'checked';}}elseif(isset($_POST['subject24'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Physical Science</label></td>
+        <td><input type="checkbox" id="subject22" name="subject22" value="Music" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'MUSIC') || (strtoupper($match_sub2_name) == 'MUSIC')){echo 'checked';}}elseif(isset($_POST['subject22'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Music</label></td>
+        <td><input type="checkbox" id="subject23" name="subject23" value="Ndebele" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'NDEBELE') || (strtoupper($match_sub2_name) == 'NDEBELE')){echo 'checked';}}elseif(isset($_POST['subject23'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Ndebele</label></td>
+        <td><input type="checkbox" id="subject24" name="subject24" value="Physical Science" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'PHYSICAL SCIENCE') || (strtoupper($match_sub2_name) == 'PHYSICAL SCIENCE')){echo 'checked';}}elseif(isset($_POST['subject24'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Physical Science</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject25" value="Physics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'PHYSICS') || (strtoupper($match_sub2_name) == 'PHYSICS')){echo 'checked';}}elseif(isset($_POST['subject25'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Physics</label></td>
-        <td><input type="checkbox" id="subject" name="subject26" value="Principles Of Accounts" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'PRINCIPLES OF ACCOUNTS') || (strtoupper($match_sub2_name) == 'PRINCIPLES OF ACCOUNTS')){echo 'checked';}}elseif(isset($_POST['subject26'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Principles Of Accounts</label></td>
-        <td><input type="checkbox" id="subject" name="subject27" value="Religious Studies" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'RELIGIOUS STUDIES') || (strtoupper($match_sub2_name) == 'RELIGIOUS STUDIES')){echo 'checked';}}elseif(isset($_POST['subject27'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Religious Studies</label></td>
+        <td><input type="checkbox" id="subject25" name="subject25" value="Physics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'PHYSICS') || (strtoupper($match_sub2_name) == 'PHYSICS')){echo 'checked';}}elseif(isset($_POST['subject25'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Physics</label></td>
+        <td><input type="checkbox" id="subject26" name="subject26" value="Principles Of Accounts" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'PRINCIPLES OF ACCOUNTS') || (strtoupper($match_sub2_name) == 'PRINCIPLES OF ACCOUNTS')){echo 'checked';}}elseif(isset($_POST['subject26'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Principles Of Accounts</label></td>
+        <td><input type="checkbox" id="subject27" name="subject27" value="Religious Studies" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'RELIGIOUS STUDIES') || (strtoupper($match_sub2_name) == 'RELIGIOUS STUDIES')){echo 'checked';}}elseif(isset($_POST['subject27'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Religious Studies</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject28" value="Shona" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'SHONA') || (strtoupper($match_sub2_name) == 'SHONA')){echo 'checked';}}elseif(isset($_POST['subject28'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Shona</label></td>
-        <td><input type="checkbox" id="subject" name="subject29" value="Sociology" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'SOCIOLOGY') || (strtoupper($match_sub2_name) == 'SOCIOLOGY')){echo 'checked';}}elseif(isset($_POST['subject29'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Sociology</label></td>
-        <td><input type="checkbox" id="subject" name="subject30" value="Statistics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'STATISTICS') || (strtoupper($match_sub2_name) == 'STATISTICS')){echo 'checked';}}elseif(isset($_POST['subject30'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Statistics</label><br>
+        <td><input type="checkbox" id="subject28" name="subject28" value="Shona" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'SHONA') || (strtoupper($match_sub2_name) == 'SHONA')){echo 'checked';}}elseif(isset($_POST['subject28'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Shona</label></td>
+        <td><input type="checkbox" id="subject29" name="subject29" value="Sociology" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'SOCIOLOGY') || (strtoupper($match_sub2_name) == 'SOCIOLOGY')){echo 'checked';}}elseif(isset($_POST['subject29'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Sociology</label></td>
+        <td><input type="checkbox" id="subject30" name="subject30" value="Statistics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'STATISTICS') || (strtoupper($match_sub2_name) == 'STATISTICS')){echo 'checked';}}elseif(isset($_POST['subject30'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Statistics</label><br>
       </tr>
       <tr>
-        <td><input type="checkbox" id="subject" name="subject31" value="Technical Graphics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'TECHNICAL GRAPHICS') || (strtoupper($match_sub2_name) == 'TECHNICAL GRAPHICS')){echo 'checked';}}elseif(isset($_POST['subject31'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Technical Graphics</label></td>
-        <td><input type="checkbox" id="subject" name="subject32" value="Woodwork" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'WOODWORK') || (strtoupper($match_sub2_name) == 'WOODWORK')){echo 'checked';}}elseif(isset($_POST['subject32'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Woodwork</label></td>
-        <td><input type="checkbox" id="subject" name="subject33" value="Tonga" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'TONGA') || (strtoupper($match_sub2_name) == 'TONGA')){echo 'checked';}}elseif(isset($_POST['subject33'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Tonga</label></td>
+        <td><input type="checkbox" id="subject31" name="subject31" value="Technical Graphics" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'TECHNICAL GRAPHICS') || (strtoupper($match_sub2_name) == 'TECHNICAL GRAPHICS')){echo 'checked';}}elseif(isset($_POST['subject31'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Technical Graphics</label></td>
+        <td><input type="checkbox" id="subject32" name="subject32" value="Woodwork" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'WOODWORK') || (strtoupper($match_sub2_name) == 'WOODWORK')){echo 'checked';}}elseif(isset($_POST['subject32'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Woodwork</label></td>
+        <td><input type="checkbox" id="subject33" name="subject33" value="Tonga" <?php if(isset($_GET['id'])){if((strtoupper($match_sub1_name) == 'TONGA') || (strtoupper($match_sub2_name) == 'TONGA')){echo 'checked';}}elseif(isset($_POST['subject33'])){echo 'checked';} ?>><label for="subject" name="subject" class="light">Tonga</label></td>
       </tr>
       </table>
 		  </div>
