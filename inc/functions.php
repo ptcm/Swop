@@ -1,4 +1,9 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('html_errors', 1);
+
 	include_once 'connection.php';
 
 	try{$results_towns = $db->query("SELECT town_id, town_name, town_province_id FROM towns");
@@ -215,8 +220,8 @@
 
 			echo '<option value='.'"'.$value['distr_name'].'"';
       global $mpd2_distr_id;
-				if(isset($_POST['preferred_district1'])){
-					if($_POST['preferred_district1'] == $value['distr_name']){
+				if(isset($_POST['preferred_district2'])){
+					if($_POST['preferred_district2'] == $value['distr_name']){
 						echo 'selected';
 						}
 					}elseif($mpd2_distr_id == $value['distr_id']){
@@ -354,11 +359,6 @@
             echo 'selected';
           }
 
-				if(isset($_POST['current_school'])){
-					if($_POST['current_school'] == $value['school_name']){
-						echo 'selected';
-					}
-				}
 
 			echo '>'.strtoupper($value['school_name']).' '.strtoupper($value['school_level']).'</option>';
 		}
@@ -579,46 +579,42 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 		//header(Location:'payreg.php');
 		//on confirmation of registration payment
-
-function create_client($ecNumber,
-						$userFirstName,
-						$userLastName,
-						$gender,
-						$mobileNumber,
-						$userEmail,
-						$userPassword,
-						$levelTaught,
-						$dateCreated,
-						$status = "OPEN",
-						$dateMatched = NULL,
-            $client_id = NULL){
+    
+    
+//this function inserts a new client if the EC # is not already in the system. Otherwise it updates details on an existing EC #.
+function create_client($ecNumber, 
+						$userFirstName, 
+						$userLastName, 
+						$gender, 
+						$mobileNumber, 
+						$userEmail, 
+						$userPassword, 
+						$levelTaught, 
+						$dateCreated, 
+						$status = 'OPEN', 
+						$dateMatched = NULL){
 		include ('connection.php');
-
-		if($client_id){
-      $sql_client = 'UPDATE clients
-                     SET client_first_name = ?,
-                        client_last_name = ?,
-                        client_sex = ?,
-                        client_mobile_no = ?,
-                        client_email = ?,
-                        client_password = ?,
-                        client_level_taught = ?
-                    WHERE client_id = ?';
-    }else{
-		$sql_client = 'INSERT INTO clients (client_ec_no,
-											client_first_name,
-											client_last_name,
-											client_sex,
-											client_mobile_no,
-											client_email,
-											client_password,
-											client_level_taught,
-											client_date_created,
-											client_status,
-											client_date_matched)
-									VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-
-    try {
+		
+		$sql_client = 'INSERT INTO `clients` (`client_ec_no`, 
+											`client_first_name`, 
+											`client_last_name`, 
+											`client_sex`, 
+											`client_mobile_no`, 
+											`client_email`, 
+											`client_password`, 
+											`client_level_taught`, 
+											`client_date_created`, 
+											`client_status`, 
+											`client_date_matched`)
+									VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  ON DUPLICATE KEY UPDATE `client_first_name` = VALUES(`client_first_name`), 
+                                           `client_last_name` = VALUES(`client_last_name`), 
+                                           `client_sex` = VALUES(`client_sex`), 
+                                           `client_mobile_no` = VALUES(`client_mobile_no`), 
+                                           `client_email` = VALUES(`client_email`), 
+                                           `client_password` = VALUES(`client_password`), 
+                                           `client_level_taught` = VALUES(`client_level_taught`)';
+				try {
 					$results_client = $db->prepare($sql_client);
 					$results_client->bindValue(1, $ecNumber, PDO::PARAM_STR);
 					$results_client->bindValue(2, $userFirstName, PDO::PARAM_STR);
@@ -631,48 +627,15 @@ function create_client($ecNumber,
 					$results_client->bindValue(9, $dateCreated);
 					$results_client->bindValue(10, $status, PDO::PARAM_STR);
 					$results_client->bindValue(11, $dateMatched);
-          if($client_id){
-            $results_client->bindValue(12, $client_id, PDO::PARAM_INT);
-          }
 					$results_client->execute();
 				} catch (Exception $e) {
 					echo "Error!: " . $e->getMessage() . "<br />";
 					return false;
 				}
 				return true;
-    }
-  }
+		}
 
-
-	/*function client_pref_prov($prefProv_id, $ecNumber){
-		include ('connection.php');
-
-       global $mpp_id;
-       if($mpp_id){
-         $sql_province = 'UPDATE match_pref_provinces
-                    SET mpp_province_id = ?
-                    WHERE mpp_client_ec_no = ?';
-
-       }else{
-       $sql_province = 'INSERT INTO match_pref_provinces
-										(mpp_province_id,
-										mpp_client_ec_no)
-								VALUES (?,?)';
-      }
-							try {
-								$results_province = $db->prepare($sql_province);
-								$results_province->bindValue(1, $prefProv_id, PDO::PARAM_INT);
-								$results_province->bindValue(2, $ecNumber, PDO::PARAM_STR);
-								$results_province->execute();
-							} catch (Exception $e) {
-								echo "Error!: " . $e->getMessage() . "<br />";
-								return false;
-							}
-							return true;
-
-  }
-  */
-
+	
     function client_pref_prov($prefProv_id, $ecNumber){
 		include ('connection.php');
        
@@ -681,7 +644,7 @@ function create_client($ecNumber,
 										mpp_client_ec_no)
 								VALUES (?,?)
                 ON DUPLICATE KEY UPDATE mpp_province_id = '.$prefProv_id;
-
+                
 							try {
 								$results_province = $db->prepare($sql_province);
 								$results_province->bindValue(1, $prefProv_id, PDO::PARAM_INT);
@@ -715,36 +678,8 @@ function create_client($ecNumber,
 							return true;
       
     }
-/*
-	function client_pref_distr1($prefDistr1_id, $ecNumber, $mpd_id1){
-
-		include ('connection.php');
     
-    if($mpd_id1){
-            $sql_districts1 = 'UPDATE match_pref_districts
-                    SET mpd_distr_id = ?
-                    WHERE mpd_id ='.$mpd_id1;
-        }else{
-        $sql_districts1 = 'INSERT INTO match_pref_districts
-						(mpd_distr_id,
-						mpd_client_ec_no)
-				VALUES (?,?)';
-    }
-				try {
-					$results_districts1 = $db->prepare($sql_districts1);
-					$results_districts1->bindValue(1, $prefDistr1_id, PDO::PARAM_INT);
-            if (!isset($mpd_id1)){
-          $results_districts1->bindValue(2, $ecNumber, PDO::PARAM_STR);
-            }
-          $results_districts1->execute();
-				} catch (Exception $e) {
-					echo "Error!: " . $e->getMessage() . "<br />";
-					return false;
-				}
-				return true;
-       
-  } 
-  */
+    
   function client_pref_distr1($prefDistr1_id, $ecNumber){
 
 		include ('connection.php');
@@ -790,37 +725,7 @@ function create_client($ecNumber,
 				return true;
        
   }
- /*
-
-		function client_pref_distr2($prefDistr2_id, $ecNumber, $mpd_id2){
-
-		include ('connection.php');
-    
-    if($mpd_id2){
-            $sql_districts2 = 'UPDATE match_pref_districts
-                    SET mpd_distr_id = ?
-                    WHERE mpd_id ='.$mpd_id2;
-        }else{
-        $sql_districts2 = 'INSERT INTO match_pref_districts
-						(mpd_distr_id,
-						mpd_client_ec_no)
-				VALUES (?,?)';
-    }
-				try {
-					$results_districts2 = $db->prepare($sql_districts2);
-					$results_districts2->bindValue(1, $prefDistr2_id, PDO::PARAM_INT);
-            if (!isset($mpd_id2)){
-          $results_districts2->bindValue(2, $ecNumber, PDO::PARAM_STR);
-            }
-          $results_districts2->execute();
-				} catch (Exception $e) {
-					echo "Error!: " . $e->getMessage() . "<br />";
-					return false;
-				}
-				return true;
-       
-  }
-*/
+ 
 		function client_pref_sch1($prefSchool1_id, $ecNumber){
 
 					include ('connection.php');
@@ -1132,26 +1037,26 @@ function create_client($ecNumber,
 
       }
     
-
-function client_curr_sch($ecNumber, $currSch_id, $currDistr_id, $currProv_id, $levelTaught, $sub1_id, $sub2_id){
-
+    
+    function client_curr_sch($ecNumber, $currSch_id, $currDistr_id, $currProv_id, $levelTaught, $sub1_id, $sub2_id){
+					
 					include ('connection.php');
-
-					$sql_current_sch = 'INSERT INTO match_current_schools
-											(mcs_client_ec_no,
-											mcs_school_id,
+					$sql_current_sch = 'INSERT INTO match_current_schools 
+											(mcs_client_ec_no, 
+											mcs_school_id, 
 											mcs_distr_id,
 											mcs_province_id,
 											mcs_client_level_taught,
                       mcs_sub1_id,
                       mcs_sub2_id)
 									VALUES (?, ?, ?, ?, ?, ?, ?)
-                  ON DUPLICATE KEY UPDATE mcs_school_id='.$currSch_id.',
-                                          mcs_distr_id='.$currDistr_id.', 
-                                          mcs_province_id='.$currProv_id.', 
-                                          mcs_client_level_taught='.$levelTaught.', 
-                                          mcs_sub1_id='.$sub1_id.', 
-                                          mcs_sub2_id='.$sub2_id;
+                  ON DUPLICATE KEY UPDATE `mcs_school_id` = VALUES(`mcs_school_id`),
+                                          `mcs_distr_id` = VALUES(`mcs_distr_id`),
+                                          `mcs_province_id` = VALUES(`mcs_province_id`),
+                                          `mcs_client_level_taught` = VALUES(`mcs_client_level_taught`),
+                                          `mcs_sub1_id` = VALUES(`mcs_sub1_id`),
+                                          `mcs_sub2_id` = VALUES(`mcs_sub2_id`)';
+									
 									try {
 										$results_current_sch = $db->prepare($sql_current_sch);
 										$results_current_sch->bindValue(1, $ecNumber, PDO::PARAM_STR);
@@ -1167,7 +1072,7 @@ function client_curr_sch($ecNumber, $currSch_id, $currDistr_id, $currProv_id, $l
 										return false;
 									}
 									return true;
-
+			
 		}
 }
 
@@ -1532,7 +1437,10 @@ function delete_pref_location ($mpl_id){
 	function get_current_schools_list(){
 
 		include ('connection.php');
-
+    
+    //global $sub_ec_no;
+    //$sub_ec_no = $item['mcs_client_ec_no'];
+    
 		try{
 			return $db->query('SELECT match_current_schools.mcs_id,
 										match_current_schools.mcs_client_ec_no,
@@ -1869,133 +1777,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_curr_schools = $results_curr_school->fetchAll(PDO::FETCH_ASSOC); 
 
-  
-try{$results_pref_school1 = $db->query('SELECT mps_school_id, mps_client_ec_no
-                                        FROM match_pref_schools
-                                        ORDER BY mps_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school1';
-			exit;
-
-	}
-	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC);  
-  
-  
-  
-  try{$results_pref_school2 = $db->query('SELECT *
-                                        FROM match_pref_schools2
-                                        ORDER BY mps2_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school2';
-			exit;
-
-	}
-	$matched_schools2 = $results_pref_school2->fetchAll(PDO::FETCH_ASSOC); 
- 
-
- try{$results_pref_school3 = $db->query('SELECT *
-                                        FROM match_pref_schools3
-                                        ORDER BY mps3_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school3';
-			exit;
-
-	}
-	$matched_schools3 = $results_pref_school3->fetchAll(PDO::FETCH_ASSOC); 
-  
-  
-  try{$results_pref_school4 = $db->query('SELECT *
-                                        FROM match_pref_schools4
-                                        ORDER BY mps4_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school4';
-			exit;
-
-	}
-	$matched_schools4 = $results_pref_school4->fetchAll(PDO::FETCH_ASSOC); 
- 
- 
- try{$results_pref_school5 = $db->query('SELECT *
-                                        FROM match_pref_schools5
-                                        ORDER BY mps5_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school5';
-			exit;
-
-	}
-	$matched_schools5 = $results_pref_school5->fetchAll(PDO::FETCH_ASSOC); 
- 
- 
- try{$results_pref_school6 = $db->query('SELECT *
-                                        FROM match_pref_schools6
-                                        ORDER BY mps6_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school6';
-			exit;
-
-	}
-	$matched_schools6 = $results_pref_school6->fetchAll(PDO::FETCH_ASSOC); 
- 
- 
- try{$results_pref_school7 = $db->query('SELECT *
-                                        FROM match_pref_schools7
-                                        ORDER BY mps7_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school7';
-			exit;
-
-	}
-	$matched_schools7 = $results_pref_school7->fetchAll(PDO::FETCH_ASSOC); 
- 
- 
- try{$results_pref_school8 = $db->query('SELECT *
-                                        FROM match_pref_schools8
-                                        ORDER BY mps8_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school8';
-			exit;
-
-	}
-	$matched_schools8 = $results_pref_school8->fetchAll(PDO::FETCH_ASSOC); 
- 
- 
- try{$results_pref_school9 = $db->query('SELECT *
-                                        FROM match_pref_schools9
-                                        ORDER BY mps9_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school9';
-			exit;
-
-	}
-	$matched_schools9 = $results_pref_school9->fetchAll(PDO::FETCH_ASSOC); 
-
- /*
- try{$results_pref_school1 = $db->query('SELECT mps.mps_client_ec_no, mcs.mcs_client_ec_no, mps.mps_school_id, mcs.mcs_school_id
-                                          FROM match_pref_schools AS mps
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps.mps_school_id = mcs.mcs_school_id
-                                          AND mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
-
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school';
-			exit;
-
-	}
-	$matched_school = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC); 
- */
- 
+    
  try{$results_pref_school1 = $db->query('SELECT mps.mps_client_ec_no,mps.mps_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
                                           FROM match_pref_schools AS mps   
                                           INNER JOIN match_current_schools AS mcs
@@ -2006,15 +1788,169 @@ try{$results_pref_school1 = $db->query('SELECT mps_school_id, mps_client_ec_no
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school';
+			echo 'Failed to retrieve matched preferred school1';
 			exit;
 
 	}
-	$matched_school = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC); 
-
+	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC); 
  
+  
+  try{$results_pref_school2 = $db->query('SELECT mps2.mps2_client_ec_no,mps2.mps2_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools2 AS mps2   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps2.mps2_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school2';
+			exit;
+
+	}
+	$matched_schools2 = $results_pref_school2->fetchAll(PDO::FETCH_ASSOC); 
+ 
+
+ try{$results_pref_school3 = $db->query('SELECT mps3.mps3_client_ec_no,mps3.mps3_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools3 AS mps3   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps3.mps3_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school3';
+			exit;
+
+	}
+	$matched_schools3 = $results_pref_school3->fetchAll(PDO::FETCH_ASSOC); 
+  
+  
+  try{$results_pref_school4 = $db->query('SELECT mps4.mps4_client_ec_no,mps4.mps4_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools4 AS mps4   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps4.mps4_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school4';
+			exit;
+
+	}
+	$matched_schools4 = $results_pref_school4->fetchAll(PDO::FETCH_ASSOC); 
+ 
+ 
+ try{$results_pref_school5 = $db->query('SELECT mps5.mps5_client_ec_no,mps5.mps5_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools5 AS mps5   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps5.mps5_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school5';
+			exit;
+
+	}
+	$matched_schools5 = $results_pref_school5->fetchAll(PDO::FETCH_ASSOC); 
+ 
+ 
+ try{$results_pref_school6 = $db->query('SELECT mps6.mps6_client_ec_no,mps6.mps6_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools6 AS mps6   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps6.mps6_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school6';
+			exit;
+
+	}
+	$matched_schools6 = $results_pref_school6->fetchAll(PDO::FETCH_ASSOC); 
+ 
+ 
+ try{$results_pref_school7 = $db->query('SELECT mps7.mps7_client_ec_no,mps7.mps7_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools7 AS mps7   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps7.mps7_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school7';
+			exit;
+
+	}
+	$matched_schools7 = $results_pref_school7->fetchAll(PDO::FETCH_ASSOC); 
+ 
+ 
+ try{$results_pref_school8 = $db->query('SELECT mps8.mps8_client_ec_no,mps8.mps8_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools8 AS mps8   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps8.mps8_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school8';
+			exit;
+
+	}
+	$matched_schools8 = $results_pref_school8->fetchAll(PDO::FETCH_ASSOC); 
+ 
+ 
+ try{$results_pref_school9 = $db->query('SELECT mps9.mps9_client_ec_no,mps9.mps9_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools9 AS mps9   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps9.mps9_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school9';
+			exit;
+
+	}
+	$matched_schools9 = $results_pref_school9->fetchAll(PDO::FETCH_ASSOC); 
+  
+  try{$results_pref_school10 = $db->query('SELECT mps10.mps10_client_ec_no,mps10.mps10_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
+                                          FROM match_pref_schools10 AS mps10   
+                                          INNER JOIN match_current_schools AS mcs
+                                          ON mps10.mps10_school_id = mcs.mcs_school_id
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                                              FROM match_current_schools AS mcs 
+                                                              GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school10';
+			exit;
+
+	}
+	$matched_schools10 = $results_pref_school9->fetchAll(PDO::FETCH_ASSOC);
+ 
+
+
+
  echo '<pre>';
- print_r($matched_school);
+ //print_r($value);
   echo '</pre>';
 
 ?>

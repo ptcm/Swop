@@ -21,11 +21,12 @@ if(isset($error_message)){
 ?>
 <html>
 	<body>
-		<table>
+		<table class="table table-responsive-sm table-warning table-hover>
 			<tr>
-				<th>Record Id</th>
-				<th>EC Number</th>
-				<th>Town Name</th>
+                <th scope="col"></th>
+				<th scope="col">Record Id</th>
+				<th scope="col">EC Number</th>
+				<th scope="col">Town Name</th>
 				</tr>
 			<?php
 			foreach (get_pref_towns_list() as $item){
@@ -34,7 +35,7 @@ if(isset($error_message)){
 				'<td>'.ucwords(strtolower($item['town_name'])).'</td>';
         echo '<td><form method="post" action="preferred_towns_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
         echo '<input type="hidden" value="'.$item['mpt_id'].'" name="delete"/>';
-        echo '<input type="submit" value="Delete"/>';
+        echo '<input type="submit" class="btn btn-outline-danger" value="Delete"/>';
         echo '</form>';
         echo '</td></tr>';
 			}

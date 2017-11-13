@@ -21,20 +21,21 @@ if(isset($error_message)){
 ?>
 <html>
 	<body>
-		<table>
+		<table class="table table-responsive-sm table-warning table-hover>
 			<tr>
-				<th>Record Id</th>
-				<th>EC Number</th>
-				<th>District Name</th>
+                <th scope="col">#</th>
+				<th scope="col">Record Id</th>
+				<th scope="col">EC Number</th>
+				<th scope="col">District Name</th>
 				</tr>
 			<?php
 			foreach (get_pref_districts_list() as $item){
 				echo '<tr><td>'.$item['mpd_id'].'</td>'.
-				'<td><a href="preferred_districts_list.php?id='.$item['mpd_id'].'">'.strtoupper($item['mpd_client_ec_no']).'</a></td>'.
+				'<td>'.strtoupper($item['mpd_client_ec_no']).'</td>'.
 				'<td>'.ucwords(strtolower($item['distr_name'])).'</td>';
         echo '<td><form method="post" action="preferred_districts_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
         echo '<input type="hidden" value="'.$item['mpd_id'].'" name="delete"/>';
-        echo '<input type="submit" value="Delete"/>';
+        echo '<input type="submit" class="btn btn-outline-danger" value="Delete"/>';
         echo '</form>';
         echo '</td></tr>';
 			}
