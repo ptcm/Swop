@@ -576,7 +576,7 @@ ini_set('html_errors', 1);
 
 	}
 
-if ($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST"){
 		//header(Location:'payreg.php');
 		//on confirmation of registration payment
     
@@ -1776,15 +1776,20 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 
 	}
 	$matched_curr_schools = $results_curr_school->fetchAll(PDO::FETCH_ASSOC); 
-
-    
- try{$results_pref_school1 = $db->query('SELECT mps.mps_client_ec_no,mps.mps_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools AS mps   
-                                          INNER JOIN match_current_schools AS mcs
+                                 
+  try{$results_pref_school1 = $db->query('SELECT mps.mps_client_ec_no,mcs.mcs_client_ec_no,clients.client_ec_no
+                                      FROM match_current_schools AS mcs
+                                      INNER JOIN match_pref_schools AS mps
                                           ON mps.mps_school_id = mcs.mcs_school_id
-                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                          AND mps.mps_status = "A" 
+                                          AND mcs.mcs_status = "A"
+                                      INNER JOIN clients
+                                          ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                          AND clients.client_status = "A"
+                                      WHERE mcs.mcs_id IN (
+                                          SELECT MIN(mcs.mcs_id) 
+                                          FROM match_current_schools AS mcs
+                                          GROUP BY mcs.mcs_school_id)
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1792,16 +1797,22 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 			exit;
 
 	}
-	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC); 
- 
+	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC);
   
-  try{$results_pref_school2 = $db->query('SELECT mps2.mps2_client_ec_no,mps2.mps2_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools2 AS mps2   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps2.mps2_school_id = mcs.mcs_school_id
+  
+ try{$results_pref_school2 = $db->query('SELECT mps2.mps2_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools2 AS mps2 
+                                            ON mps2.mps2_school_id = mcs.mcs_school_id
+                                            AND mps2.mps2_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1810,15 +1821,20 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 
 	}
 	$matched_schools2 = $results_pref_school2->fetchAll(PDO::FETCH_ASSOC); 
- 
 
- try{$results_pref_school3 = $db->query('SELECT mps3.mps3_client_ec_no,mps3.mps3_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools3 AS mps3   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps3.mps3_school_id = mcs.mcs_school_id
+ try{$results_pref_school3 = $db->query('SELECT mps3.mps3_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools3 AS mps3 
+                                            ON mps3.mps3_school_id = mcs.mcs_school_id
+                                            AND mps3.mps3_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1826,16 +1842,22 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 			exit;
 
 	}
-	$matched_schools3 = $results_pref_school3->fetchAll(PDO::FETCH_ASSOC); 
+	$matched_schools3 = $results_pref_school3->fetchAll(PDO::FETCH_ASSOC);  
   
   
-  try{$results_pref_school4 = $db->query('SELECT mps4.mps4_client_ec_no,mps4.mps4_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools4 AS mps4   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps4.mps4_school_id = mcs.mcs_school_id
+  try{$results_pref_school4 = $db->query('SELECT mps4.mps4_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools4 AS mps4 
+                                            ON mps4.mps4_school_id = mcs.mcs_school_id
+                                            AND mps4.mps4_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1843,16 +1865,22 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 			exit;
 
 	}
-	$matched_schools4 = $results_pref_school4->fetchAll(PDO::FETCH_ASSOC); 
+	$matched_schools4 = $results_pref_school4->fetchAll(PDO::FETCH_ASSOC);  
  
  
- try{$results_pref_school5 = $db->query('SELECT mps5.mps5_client_ec_no,mps5.mps5_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools5 AS mps5   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps5.mps5_school_id = mcs.mcs_school_id
+ try{$results_pref_school5 = $db->query('SELECT mps5.mps5_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools5 AS mps5 
+                                            ON mps5.mps5_school_id = mcs.mcs_school_id
+                                            AND mps5.mps5_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1863,13 +1891,19 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools5 = $results_pref_school5->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school6 = $db->query('SELECT mps6.mps6_client_ec_no,mps6.mps6_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools6 AS mps6   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps6.mps6_school_id = mcs.mcs_school_id
+ try{$results_pref_school6 = $db->query('SELECT mps6.mps6_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools6 AS mps6 
+                                            ON mps6.mps6_school_id = mcs.mcs_school_id
+                                            AND mps6.mps6_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1880,13 +1914,19 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools6 = $results_pref_school6->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school7 = $db->query('SELECT mps7.mps7_client_ec_no,mps7.mps7_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools7 AS mps7   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps7.mps7_school_id = mcs.mcs_school_id
+ try{$results_pref_school7 = $db->query('SELECT mps7.mps7_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools7 AS mps7 
+                                            ON mps7.mps7_school_id = mcs.mcs_school_id
+                                            AND mps7.mps7_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1897,13 +1937,19 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools7 = $results_pref_school7->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school8 = $db->query('SELECT mps8.mps8_client_ec_no,mps8.mps8_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools8 AS mps8   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps8.mps8_school_id = mcs.mcs_school_id
+ try{$results_pref_school8 = $db->query('SELECT mps8.mps8_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools8 AS mps8 
+                                            ON mps8.mps8_school_id = mcs.mcs_school_id
+                                            AND mps8.mps8_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1914,13 +1960,19 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools8 = $results_pref_school8->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school9 = $db->query('SELECT mps9.mps9_client_ec_no,mps9.mps9_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools9 AS mps9   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps9.mps9_school_id = mcs.mcs_school_id
+ try{$results_pref_school9 = $db->query('SELECT mps9.mps9_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools9 AS mps9 
+                                            ON mps9.mps9_school_id = mcs.mcs_school_id
+                                            AND mps9.mps9_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1928,15 +1980,21 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 			exit;
 
 	}
-	$matched_schools9 = $results_pref_school9->fetchAll(PDO::FETCH_ASSOC); 
+	$matched_schools9 = $results_pref_school9->fetchAll(PDO::FETCH_ASSOC);  
   
-  try{$results_pref_school10 = $db->query('SELECT mps10.mps10_client_ec_no,mps10.mps10_school_id, mcs.mcs_client_ec_no,  mcs.mcs_school_id 
-                                          FROM match_pref_schools10 AS mps10   
-                                          INNER JOIN match_current_schools AS mcs
-                                          ON mps10.mps10_school_id = mcs.mcs_school_id
+  try{$results_pref_school10 = $db->query('SELECT mps10.mps10_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_schools10 AS mps10 
+                                            ON mps10.mps10_school_id = mcs.mcs_school_id
+                                            AND mps10.mps10_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
-                                                              FROM match_current_schools AS mcs 
-                                                              GROUP BY mcs.mcs_school_id)
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_school_id)
+                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1944,13 +2002,165 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 			exit;
 
 	}
-	$matched_schools10 = $results_pref_school9->fetchAll(PDO::FETCH_ASSOC);
- 
+	$matched_schools10 = $results_pref_school10->fetchAll(PDO::FETCH_ASSOC); 
+  
+  try{$results_pref_locations1 = $db->query('SELECT mpl.mpl_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_locations AS mpl 
+                                            ON mpl.mpl_loc_id = mcs.mcs_loc_id
+                                            AND mpl.mpl_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_loc_id)
+                                            
+                                          ORDER BY mcs.mcs_id');
 
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched locations1';
+			exit;
 
+	}
+	$matched_locations1 = $results_pref_locations1->fetchAll(PDO::FETCH_ASSOC); 
+  
+  try{$results_pref_locations2 = $db->query('SELECT mpl2.mpl2_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_locations2 AS mpl2 
+                                            ON mpl2.mpl2_loc_id = mcs.mcs_loc_id
+                                            AND mpl2.mpl2_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_loc_id)
+                                            
+                                          ORDER BY mcs.mcs_id');
 
- echo '<pre>';
- //print_r($value);
-  echo '</pre>';
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched locations2';
+			exit;
+
+	}
+	$matched_locations2 = $results_pref_locations2->fetchAll(PDO::FETCH_ASSOC); 
+  
+  try{$results_pref_locations3 = $db->query('SELECT mpl3.mpl3_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_locations3 AS mpl3 
+                                            ON mpl3.mpl3_loc_id = mcs.mcs_loc_id
+                                            AND mpl3.mpl3_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_loc_id)
+                                            
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched locations3';
+			exit;
+
+	}
+	$matched_locations3 = $results_pref_locations3->fetchAll(PDO::FETCH_ASSOC); 
+  
+  try{$results_pref_districts1 = $db->query('SELECT mpd.mpd_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_districts AS mpd 
+                                            ON mpd.mpd_distr_id = mcs.mcs_distr_id
+                                            AND mpd.mpd_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_distr_id)
+                                            
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched districts1';
+			exit;
+
+	}
+	$matched_districts1 = $results_pref_districts1->fetchAll(PDO::FETCH_ASSOC);
+  
+  try{$results_pref_districts2 = $db->query('SELECT mpd2.mpd2_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_districts2 AS mpd2 
+                                            ON mpd2.mpd2_distr_id = mcs.mcs_distr_id
+                                            AND mpd2.mpd2_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_distr_id)
+                                            
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched districts2';
+			exit;
+
+	}
+	$matched_districts2 = $results_pref_districts2->fetchAll(PDO::FETCH_ASSOC);
+  
+  try{$results_pref_towns = $db->query('SELECT mpt.mpt_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_towns AS mpt 
+                                            ON mpt.mpt_town_id = mcs.mcs_town_id
+                                            AND mpt.mpt_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_town_id)
+                                            
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched towns';
+			exit;
+
+	}
+	$matched_towns = $results_pref_towns->fetchAll(PDO::FETCH_ASSOC);
+  
+  try{$results_pref_provinces = $db->query('SELECT mpp.mpp_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+                                          FROM match_current_schools AS mcs  
+                                          INNER JOIN match_pref_provinces AS mpp 
+                                            ON mpp.mpp_province_id = mcs.mcs_province_id
+                                            AND mpp.mpp_status = "A" 
+                                            AND mcs.mcs_status = "A"
+                                          INNER JOIN clients
+                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                            AND clients.client_status = "A"
+                                          WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
+                                            FROM match_current_schools AS mcs 
+                                            GROUP BY mcs.mcs_province_id)
+                                            
+                                          ORDER BY mcs.mcs_id');
+
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched provinces';
+			exit;
+
+	}
+	$matched_provinces = $results_pref_provinces->fetchAll(PDO::FETCH_ASSOC);
+  
+  
+  echo "<pre>";
+//print_r($matched_schools1).'<br>';
+echo "</pre>";
 
 ?>
