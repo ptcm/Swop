@@ -149,13 +149,20 @@ hr {
 .message {
 	background-color:#990000;
 	border-radius:4px;
-	padding:1.5rem;
+	padding:12px;
 	color:#fff;
 		
 	}
 
 .error {
 	margin: auto;
+  font-size: 18px;
+  animation: blinker 0.8s linear infinite;
+  color: #99e013;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
 }
 
 fieldset {
@@ -175,17 +182,11 @@ fieldset {
 }
 
 
-th,td {
-	 /* 
-	text-align: left;
-  width: 100px;
- border: 1px solid black; */
-}
-
  a:link {
-    /*background-color:  #85a3e0; */
+    font-size: 15px;
+    font-weight: normal;
     color: white;
-    padding: 3px 10px;
+    padding: 10px 10px 10px;
     text-align: center; 
     text-decoration: none;
     display: inline-block;
@@ -198,17 +199,8 @@ a:hover, a:active {
     background-color: grey;
 }
 
-ul{
-	
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-}
-
-li{
-	display: inline;
-	margin: 0;
-	padding: 0;
+ul > li {
+	display: inline-block;
 }
 
 #mainlinks {
@@ -237,3 +229,8 @@ li{
 	border-style: hidden;
 	border-radius: 10px;
 }
+
+textarea {
+    margin: 0px;
+    width: 370px;
+    height: 175px;
