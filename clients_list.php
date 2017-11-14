@@ -20,7 +20,10 @@ if(isset($error_message)){
 }
 ?>
 <html>
-	<body>
+  <head>
+    <link rel = "stylesheet" href = "css/styles.css">
+  </head>
+	<body class = "body">
 		<table>
 			<tr>
 				<th>ID Number</th>
