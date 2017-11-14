@@ -13,14 +13,12 @@
     <div class = "section hidden">
 		<header>
 		  <h1 id="sitename">SwopMatch Handler</h1>
-		<!--	<nav class = "menu" id="mainlinks"> -->
-			      <ul>
-					<li><a href="index.php">Home</a></li>
-					<li><a href="Account_manage.php" target = "_blank">My Account</a></li>
-					<li><a href="suggest.php" target = "_blank">Suggest</a></li>
-					<li><a href="reports.php" target = "_blank">Reports</a></li>
-					<li><a href="#">Contact</a></li>
+			  <ul id="nav">
+					<li><a href="index.php"  style = "font-size: 19px" >Home</a></li>
+					<li><a href="Account_manage.php" target = "_blank" style = "font-size: 19px">My Account</a></li>
+					<li><a href="suggest.php" target = "_blank" style = "font-size: 19px">Suggest</a></li>
+					<li><a href="reports.php" target = "_blank" style = "font-size: 19px">Reports</a></li>
+					<li><a href="#" style = "font-size: 19px">Contact</a></li>
 				</ul>
-			<!-- </nav> -->
 		</header>
 	</div>

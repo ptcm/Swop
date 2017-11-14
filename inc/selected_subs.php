@@ -105,19 +105,24 @@
 				if ($key == 0){					
 					$sub1 = $value;
 				}
+        
 				if ($key == 1){
 					$sub2 = $value;
 				}
 			}
-			
+      			
 			foreach($subjects as $key=>$value){
+        if(isset($sub1)){
 					if(in_array(strtoupper($sub1),$value)){
 					$sub1_id = $value['sub_id'];
 					}
-					if(in_array(strtoupper($sub2),$value)){
-						$sub2_id = $value['sub_id'];
-					}
-				}
+        }
+					if(isset($sub2)){
+            if(in_array(strtoupper($sub2),$value)){
+              $sub2_id = $value['sub_id'];
+            }
+          }
+        }
 		
 			
 			

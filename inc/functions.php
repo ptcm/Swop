@@ -725,245 +725,351 @@ function create_client($ecNumber,
 				return true;
        
   }
- 
-		function client_pref_sch1($prefSchool1_id, $ecNumber){
+    //this function creates a record in the 'match_pref_schools' database if the EC number is not already in the system otherwise it updates the record with that EC #
+		function client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught, $optional){
 
 					include ('connection.php');
 
-					$sql_school1 = 'INSERT INTO match_pref_schools
-											(mps_school_id,
-											mps_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps_school_id ='.$prefSchool1_id;
+          //the below code deletes previously saved provinces option upon switching to selecting by preferred schools
+          $sql_del = 'DELETE FROM match_pref_provinces
+                  WHERE mpp_client_ec_no = ?';
 
-									try {
+          try {
+            $results_del_sch1 = $db->prepare($sql_del);
+            $results_del_sch1->bindValue(1, $ecNumber, PDO::PARAM_STR);
+            $results_del_sch1->execute();
+          } catch (Exception $e) {
+            echo "Error!: " . $e->getMessage() . "<br />";
+            return false;
+          }
+          
+          //insertion or updating of records is handled by the below code
+          $sql_school1 = 'INSERT INTO `match_pref_schools`
+                       (`mps_school_id`,
+                        `mps_client_ec_no`,
+                        `mps_client_level_taught`,
+                        `mps_sub1_id`,
+                        `mps_sub2_id`)
+									VALUES (?, ?, ?, ?, ?)
+                  ON DUPLICATE KEY UPDATE `mps_school_id` = VALUES(`mps_school_id`),
+                                          `mps_client_level_taught` = VALUES(`mps_client_level_taught`), 
+                                           `mps_sub1_id` = VALUES(`mps_sub1_id`), 
+                                           `mps_sub2_id` = VALUES(`mps_sub2_id`)';
+
+									//try {
 										$results_school1 = $db->prepare($sql_school1);
 										$results_school1->bindValue(1, $prefSchool1_id, PDO::PARAM_INT);
 										$results_school1->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                    $results_school1->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                    $results_school1->bindValue(4, $optional['mps_sub1_id'], PDO::PARAM_INT);
+                    $results_school1->bindValue(5, $optional['mps_sub2_id'], PDO::PARAM_INT);
 										$results_school1->execute();
-									} catch (Exception $e) {
+									/*} catch (Exception $e) {
 										echo "Error!: " . $e->getMessage() . "<br />";
 										return false;
-									}
+									}*/
 									return true;
-
-            }
+          
+    }
     
+    //this function creates a record in the 'match_pref_schools2' database if the EC number is not already in the system otherwise it updates the record with that EC #
+    function client_pref_sch2($prefSchool2_id, $ecNumber, $levelTaught, $optional){
 
-		function client_pref_sch2($prefSchool2_id, $ecNumber){
+              include ('connection.php');
 
-						include ('connection.php');
+              $sql_school2 = 'INSERT INTO `match_pref_schools2`
+                           (`mps2_school_id`,
+                            `mps2_client_ec_no`,
+                            `mps2_client_level_taught`,
+                            `mps2_sub1_id`,
+                            `mps2_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps2_school_id` = VALUES(`mps2_school_id`),
+                                              `mps2_client_level_taught` = VALUES(`mps2_client_level_taught`), 
+                                               `mps2_sub1_id` = VALUES(`mps2_sub1_id`), 
+                                               `mps2_sub2_id` = VALUES(`mps2_sub2_id`)';
 
-						$sql_school2 = 'INSERT INTO match_pref_schools2
-											(mps2_school_id,
-											mps2_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps2_school_id ='.$prefSchool2_id;
+                      try {
+                        $results_school2 = $db->prepare($sql_school2);
+                        $results_school2->bindValue(1, $prefSchool2_id, PDO::PARAM_INT);
+                        $results_school2->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school2->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school2->bindValue(4, $optional['mps2_sub1_id'], PDO::PARAM_INT);
+                        $results_school2->bindValue(5, $optional['mps2_sub2_id'], PDO::PARAM_INT);
+                        $results_school2->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
 
-									try {
-										$results_school2 = $db->prepare($sql_school2);
-										$results_school2->bindValue(1, $prefSchool2_id, PDO::PARAM_INT);
-										$results_school2->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school2->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
+                }
+      
+      //this function creates a record in the 'match_pref_schools3' database if the EC number is not already in the system otherwise it updates the record with that EC #
+			function client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught, $optional){
 
-              }
+              include ('connection.php');
+
+              $sql_school3 = 'INSERT INTO `match_pref_schools3`
+                           (`mps3_school_id`,
+                            `mps3_client_ec_no`,
+                            `mps3_client_level_taught`,
+                            `mps3_sub1_id`,
+                            `mps3_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps3_school_id` = VALUES(`mps3_school_id`),
+                                              `mps3_client_level_taught` = VALUES(`mps3_client_level_taught`), 
+                                               `mps3_sub1_id` = VALUES(`mps3_sub1_id`), 
+                                               `mps3_sub2_id` = VALUES(`mps3_sub2_id`)';
+
+                      try {
+                        $results_school3 = $db->prepare($sql_school3);
+                        $results_school3->bindValue(1, $prefSchool3_id, PDO::PARAM_INT);
+                        $results_school3->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school3->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school3->bindValue(4, $optional['mps3_sub1_id'], PDO::PARAM_INT);
+                        $results_school3->bindValue(5, $optional['mps3_sub2_id'], PDO::PARAM_INT);
+                        $results_school3->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
+
+                }
     
+      //this function creates a record in the 'match_pref_schools4' database if the EC number is not already in the system otherwise it updates the record with that EC #
+			function client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught, $optional){
 
-			function client_pref_sch3($prefSchool3_id, $ecNumber){
+              include ('connection.php');
 
-				include ('connection.php');
+              $sql_school4 = 'INSERT INTO `match_pref_schools4`
+                           (`mps4_school_id`,
+                            `mps4_client_ec_no`,
+                            `mps4_client_level_taught`,
+                            `mps4_sub1_id`,
+                            `mps4_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps4_school_id` = VALUES(`mps4_school_id`),
+                                              `mps4_client_level_taught` = VALUES(`mps4_client_level_taught`), 
+                                               `mps4_sub1_id` = VALUES(`mps4_sub1_id`), 
+                                               `mps4_sub2_id` = VALUES(`mps4_sub2_id`)';
 
-        $sql_school3 = 'INSERT INTO match_pref_schools3
-											(mps3_school_id,
-											mps3_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps3_school_id ='.$prefSchool3_id;
+                      try {
+                        $results_school4 = $db->prepare($sql_school4);
+                        $results_school4->bindValue(1, $prefSchool4_id, PDO::PARAM_INT);
+                        $results_school4->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school4->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school4->bindValue(4, $optional['mps4_sub1_id'], PDO::PARAM_INT);
+                        $results_school4->bindValue(5, $optional['mps4_sub2_id'], PDO::PARAM_INT);
+                        $results_school4->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
 
-									try {
-										$results_school3 = $db->prepare($sql_school3);
-										$results_school3->bindValue(1, $prefSchool3_id, PDO::PARAM_INT);
-										$results_school3->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school3->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
+                }
+      
+      //this function creates a record in the 'match_pref_schools5' database if the EC number is not already in the system otherwise it updates the record with that EC #
+			function client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught, $optional){
 
+              include ('connection.php');
 
-			}
-    
+              $sql_school5 = 'INSERT INTO `match_pref_schools5`
+                           (`mps5_school_id`,
+                            `mps5_client_ec_no`,
+                            `mps5_client_level_taught`,
+                            `mps5_sub1_id`,
+                            `mps5_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps5_school_id` = VALUES(`mps5_school_id`),
+                                              `mps5_client_level_taught` = VALUES(`mps5_client_level_taught`), 
+                                               `mps5_sub1_id` = VALUES(`mps5_sub1_id`), 
+                                               `mps5_sub2_id` = VALUES(`mps5_sub2_id`)';
 
-			function client_pref_sch4($prefSchool4_id, $ecNumber){
+                      try {
+                        $results_school5 = $db->prepare($sql_school5);
+                        $results_school5->bindValue(1, $prefSchool5_id, PDO::PARAM_INT);
+                        $results_school5->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school5->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school5->bindValue(4, $optional['mps5_sub1_id'], PDO::PARAM_INT);
+                        $results_school5->bindValue(5, $optional['mps5_sub2_id'], PDO::PARAM_INT);
+                        $results_school5->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
 
-				include ('connection.php');
-
-				$sql_school4 = 'INSERT INTO match_pref_schools4
-											(mps4_school_id,
-											mps4_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps4_school_id ='.$prefSchool4_id;
-
-									try {
-										$results_school4 = $db->prepare($sql_school4);
-										$results_school4->bindValue(1, $prefSchool4_id, PDO::PARAM_INT);
-										$results_school4->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school4->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
-
-              }
+                }
       
 
-			function client_pref_sch5($prefSchool5_id, $ecNumber){
+			//this function creates a record in the 'match_pref_schools6' database if the EC number is not already in the system otherwise it updates the record with that EC #
+      function client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught, $optional){
 
-						include ('connection.php');
+              include ('connection.php');
 
-						$sql_school5 = 'INSERT INTO match_pref_schools5
-											(mps5_school_id,
-											mps5_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps5_school_id ='.$prefSchool5_id;
+              $sql_school6 = 'INSERT INTO `match_pref_schools6`
+                           (`mps6_school_id`,
+                            `mps6_client_ec_no`,
+                            `mps6_client_level_taught`,
+                            `mps6_sub1_id`,
+                            `mps6_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps6_school_id` = VALUES(`mps6_school_id`),
+                                              `mps6_client_level_taught` = VALUES(`mps6_client_level_taught`), 
+                                               `mps6_sub1_id` = VALUES(`mps6_sub1_id`), 
+                                               `mps6_sub2_id` = VALUES(`mps6_sub2_id`)';
 
-									try {
-										$results_school5 = $db->prepare($sql_school5);
-										$results_school5->bindValue(1, $prefSchool5_id, PDO::PARAM_INT);
-										$results_school5->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school5->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
+                      try {
+                        $results_school6 = $db->prepare($sql_school6);
+                        $results_school6->bindValue(1, $prefSchool6_id, PDO::PARAM_INT);
+                        $results_school6->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school6->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school6->bindValue(4, $optional['mps6_sub1_id'], PDO::PARAM_INT);
+                        $results_school6->bindValue(5, $optional['mps6_sub2_id'], PDO::PARAM_INT);
+                        $results_school6->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
 
-        }
+                }
       
 
-			function client_pref_sch6($prefSchool6_id, $ecNumber){
-        
-          include ('connection.php');
+    //this function creates a record in the 'match_pref_schools7' database if the EC number is not already in the system otherwise it updates the record with that EC #
+		function client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught, $optional){
 
-					$sql_school6 = 'INSERT INTO match_pref_schools6
-											(mps6_school_id,
-											mps6_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps6_school_id ='.$prefSchool6_id;
+              include ('connection.php');
 
-									try {
-										$results_school6 = $db->prepare($sql_school6);
-										$results_school6->bindValue(1, $prefSchool6_id, PDO::PARAM_INT);
-										$results_school6->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school6->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
+              $sql_school7 = 'INSERT INTO `match_pref_schools7`
+                           (`mps7_school_id`,
+                            `mps7_client_ec_no`,
+                            `mps7_client_level_taught`,
+                            `mps7_sub1_id`,
+                            `mps7_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps7_school_id` = VALUES(`mps7_school_id`),
+                                              `mps7_client_level_taught` = VALUES(`mps7_client_level_taught`), 
+                                               `mps7_sub1_id` = VALUES(`mps7_sub1_id`), 
+                                               `mps7_sub2_id` = VALUES(`mps7_sub2_id`)';
 
-				}
-      
+                      try {
+                        $results_school7 = $db->prepare($sql_school7);
+                        $results_school7->bindValue(1, $prefSchool7_id, PDO::PARAM_INT);
+                        $results_school7->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school7->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school7->bindValue(4, $optional['mps7_sub1_id'], PDO::PARAM_INT);
+                        $results_school7->bindValue(5, $optional['mps7_sub2_id'], PDO::PARAM_INT);
+                        $results_school7->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
 
-		function client_pref_sch7($prefSchool7_id, $ecNumber){
-
-				include ('connection.php');
-
-				$sql_school7 = 'INSERT INTO match_pref_schools7
-											(mps7_school_id,
-											mps7_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps7_school_id ='.$prefSchool7_id;
-
-									try {
-										$results_school7 = $db->prepare($sql_school7);
-										$results_school7->bindValue(1, $prefSchool7_id, PDO::PARAM_INT);
-										$results_school7->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school7->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
-
-        }
+                }
     
+      //this function creates a record in the 'match_pref_schools8' database if the EC number is not already in the system otherwise it updates the record with that EC #
+			function client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught, $optional){
 
-			function client_pref_sch8($prefSchool8_id, $ecNumber){
-        
-          include ('connection.php');
+              include ('connection.php');
 
-					$sql_school8 = 'INSERT INTO match_pref_schools8
-											(mps8_school_id,
-											mps8_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps8_school_id ='.$prefSchool8_id;
+              $sql_school8 = 'INSERT INTO `match_pref_schools8`
+                           (`mps8_school_id`,
+                            `mps8_client_ec_no`,
+                            `mps8_client_level_taught`,
+                            `mps8_sub1_id`,
+                            `mps8_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps8_school_id` = VALUES(`mps8_school_id`),
+                                              `mps8_client_level_taught` = VALUES(`mps8_client_level_taught`), 
+                                               `mps8_sub1_id` = VALUES(`mps8_sub1_id`), 
+                                               `mps8_sub2_id` = VALUES(`mps8_sub2_id`)';
 
-									try {
-										$results_school8 = $db->prepare($sql_school8);
-										$results_school8->bindValue(1, $prefSchool8_id, PDO::PARAM_INT);
-										$results_school8->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school8->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
-          }
+                      try {
+                        $results_school8 = $db->prepare($sql_school8);
+                        $results_school8->bindValue(1, $prefSchool8_id, PDO::PARAM_INT);
+                        $results_school8->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school8->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school8->bindValue(4, $optional['mps8_sub1_id'], PDO::PARAM_INT);
+                        $results_school8->bindValue(5, $optional['mps8_sub2_id'], PDO::PARAM_INT);
+                        $results_school8->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
+
+                }
       
+    //this function creates a record in the 'match_pref_schools9' database if the EC number is not already in the system otherwise it updates the record with that EC #
+		function client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught, $optional){
 
-		function client_pref_sch9($prefSchool9_id, $ecNumber){
+              include ('connection.php');
 
-				include ('connection.php');
+              $sql_school9 = 'INSERT INTO `match_pref_schools9`
+                           (`mps9_school_id`,
+                            `mps9_client_ec_no`,
+                            `mps9_client_level_taught`,
+                            `mps9_sub1_id`,
+                            `mps9_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps9_school_id` = VALUES(`mps9_school_id`),
+                                              `mps9_client_level_taught` = VALUES(`mps9_client_level_taught`), 
+                                               `mps9_sub1_id` = VALUES(`mps9_sub1_id`), 
+                                               `mps9_sub2_id` = VALUES(`mps9_sub2_id`)';
 
-				$sql_school9 = 'INSERT INTO match_pref_schools9
-											(mps9_school_id,
-											mps9_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps9_school_id ='.$prefSchool9_id;
+                      try {
+                        $results_school9 = $db->prepare($sql_school9);
+                        $results_school9->bindValue(1, $prefSchool9_id, PDO::PARAM_INT);
+                        $results_school9->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school9->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school9->bindValue(4, $optional['mps9_sub1_id'], PDO::PARAM_INT);
+                        $results_school9->bindValue(5, $optional['mps9_sub2_id'], PDO::PARAM_INT);
+                        $results_school9->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
 
-									try {
-										$results_school9 = $db->prepare($sql_school9);
-										$results_school9->bindValue(1, $prefSchool9_id, PDO::PARAM_INT);
-										$results_school9->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school9->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
-
-        }
+                }
 		
+    //this function creates a record in the 'match_pref_schools10' database if the EC number is not already in the system otherwise it updates the record with that EC #
+		function client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught, $optional){
 
-		function client_pref_sch10($prefSchool10_id, $ecNumber){
+              include ('connection.php');
 
-					include ('connection.php');
+              $sql_school10 = 'INSERT INTO `match_pref_schools10`
+                           (`mps10_school_id`,
+                            `mps10_client_ec_no`,
+                            `mps10_client_level_taught`,
+                            `mps10_sub1_id`,
+                            `mps10_sub2_id`)
+                      VALUES (?, ?, ?, ?, ?)
+                      ON DUPLICATE KEY UPDATE `mps10_school_id` = VALUES(`mps10_school_id`),
+                                              `mps10_client_level_taught` = VALUES(`mps10_client_level_taught`), 
+                                               `mps10_sub1_id` = VALUES(`mps10_sub1_id`), 
+                                               `mps10_sub2_id` = VALUES(`mps10_sub2_id`)';
 
-					$sql_school10 = 'INSERT INTO match_pref_schools10
-											(mps10_school_id,
-											mps10_client_ec_no)
-									VALUES (?, ?)
-                  ON DUPLICATE KEY UPDATE mps10_school_id ='.$prefSchool10_id;
+                      try {
+                        $results_school10 = $db->prepare($sql_school10);
+                        $results_school10->bindValue(1, $prefSchool10_id, PDO::PARAM_INT);
+                        $results_school10->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                        $results_school10->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                        $results_school10->bindValue(4, $optional['mps10_sub1_id'], PDO::PARAM_INT);
+                        $results_school10->bindValue(5, $optional['mps10_sub2_id'], PDO::PARAM_INT);
+                        $results_school10->execute();
+                      } catch (Exception $e) {
+                        echo "Error!: " . $e->getMessage() . "<br />";
+                        return false;
+                      }
+                      return true;
 
-									try {
-										$results_school10 = $db->prepare($sql_school10);
-										$results_school10->bindValue(1, $prefSchool10_id, PDO::PARAM_INT);
-										$results_school10->bindValue(2, $ecNumber, PDO::PARAM_STR);
-										$results_school10->execute();
-									} catch (Exception $e) {
-										echo "Error!: " . $e->getMessage() . "<br />";
-										return false;
-									}
-									return true;
-
-        }
+                }
 		
 
 		function client_pref_loc1($prefLocation1_id, $ecNumber){
@@ -1038,7 +1144,7 @@ function create_client($ecNumber,
       }
     
     
-    function client_curr_sch($ecNumber, $currSch_id, $currDistr_id, $currProv_id, $levelTaught, $sub1_id, $sub2_id){
+    function client_curr_sch($ecNumber, $currSch_id, $currDistr_id, $currProv_id, $levelTaught, $optional){
 					
 					include ('connection.php');
 					$sql_current_sch = 'INSERT INTO match_current_schools 
@@ -1064,8 +1170,8 @@ function create_client($ecNumber,
 										$results_current_sch->bindValue(3, $currDistr_id, PDO::PARAM_INT);
 										$results_current_sch->bindValue(4, $currProv_id, PDO::PARAM_INT);
 										$results_current_sch->bindValue(5, $levelTaught, PDO::PARAM_STR);
-                    $results_current_sch->bindValue(6, $sub1_id, PDO::PARAM_INT);
-                    $results_current_sch->bindValue(7, $sub2_id, PDO::PARAM_INT);
+                    $results_current_sch->bindValue(6, $optional['mcs_sub1_id'], PDO::PARAM_INT);
+                    $results_current_sch->bindValue(7, $optional['mcs_sub2_id'], PDO::PARAM_INT);
 										$results_current_sch->execute();
 									} catch (Exception $e) {
 										echo "Error!: " . $e->getMessage() . "<br />";
@@ -1776,34 +1882,104 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 
 	}
 	$matched_curr_schools = $results_curr_school->fetchAll(PDO::FETCH_ASSOC); 
-                                 
-  try{$results_pref_school1 = $db->query('SELECT mps.mps_client_ec_no,mcs.mcs_client_ec_no,clients.client_ec_no
+ /*
+  try{
+    $results_pref_school1 = $db->query("SELECT mps.mps_client_ec_no,mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.Pref_ID
                                       FROM match_current_schools AS mcs
                                       INNER JOIN match_pref_schools AS mps
                                           ON mps.mps_school_id = mcs.mcs_school_id
-                                          AND mps.mps_status = "A" 
-                                          AND mcs.mcs_status = "A"
+                                          AND mps.mps_client_level_taught = mcs.mcs_client_level_taught
+                                          AND ((mps.mps_sub1_id = mcs.mcs_sub1_id) 
+                                          OR (mps.mps_sub1_id = mcs.mcs_sub2_id)
+                                          OR (mps.mps_sub2_id = mcs.mcs_sub1_id)
+                                          OR (mps.mps_sub2_id = mcs.mcs_sub2_id))
+                                          AND mps.mps_status = 'A' 
+                                          AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS Pref_ID
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id AS Pref_ID
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id AS Pref_ID
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id AS Pref_ID
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id AS Pref_ID
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id AS Pref_ID
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id AS Pref_ID
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id AS Pref_ID
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id AS Pref_ID
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id AS Pref_ID
+                                              FROM match_pref_schools10
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                       INNER JOIN clients
                                           ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                          AND clients.client_status = "A"
+                                          AND clients.client_status = 'A'
                                       WHERE mcs.mcs_id IN (
                                           SELECT MIN(mcs.mcs_id) 
                                           FROM match_current_schools AS mcs
                                           GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
-
+                                          ORDER BY mcs.mcs_id");
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school1';
 			exit;
 
 	}
+  
 	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC);
+   */ 
+   
+   try{
+    $results_pref_school1 = $db->query("SELECT mps.mps_client_ec_no,mcs.mcs_client_ec_no
+                                      FROM match_current_schools AS mcs
+                                      INNER JOIN match_pref_schools AS mps
+                                          ON mps.mps_school_id = mcs.mcs_school_id
+                                          AND mps.mps_client_level_taught = mcs.mcs_client_level_taught
+                                          AND ((mps.mps_sub1_id = mcs.mcs_sub1_id) 
+                                          OR (mps.mps_sub1_id = mcs.mcs_sub2_id)
+                                          OR (mps.mps_sub2_id = mcs.mcs_sub1_id)
+                                          OR (mps.mps_sub2_id = mcs.mcs_sub2_id))
+                                          AND mps.mps_status = 'A' 
+                                          AND mcs.mcs_status = 'A'
+                                      INNER JOIN clients
+                                          ON mcs.mcs_client_ec_no = clients.client_ec_no
+                                          AND clients.client_status = 'A'
+                                      WHERE mcs.mcs_id IN (
+                                          SELECT MIN(mcs.mcs_id) 
+                                          FROM match_current_schools AS mcs
+                                          GROUP BY mcs.mcs_school_id)
+                                          ORDER BY mcs.mcs_id");
+	}catch (Exception $e){
+			echo 'Failed to retrieve matched preferred school1';
+			exit;
+
+	}
   
-  
+	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC);
  try{$results_pref_school2 = $db->query('SELECT mps2.mps2_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools2 AS mps2 
                                             ON mps2.mps2_school_id = mcs.mcs_school_id
+                                            AND mps2.mps2_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps2.mps2_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps2.mps2_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps2.mps2_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps2.mps2_sub2_id = mcs.mcs_sub2_id))
                                             AND mps2.mps2_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1812,7 +1988,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1826,6 +2001,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools3 AS mps3 
                                             ON mps3.mps3_school_id = mcs.mcs_school_id
+                                            AND mps3.mps3_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps3.mps3_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps3.mps3_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps3.mps3_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps3.mps3_sub2_id = mcs.mcs_sub2_id))
                                             AND mps3.mps3_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1834,7 +2014,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1849,6 +2028,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools4 AS mps4 
                                             ON mps4.mps4_school_id = mcs.mcs_school_id
+                                            AND mps4.mps4_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps4.mps4_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps4.mps4_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps4.mps4_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps4.mps4_sub2_id = mcs.mcs_sub2_id))
                                             AND mps4.mps4_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1857,7 +2041,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1872,6 +2055,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools5 AS mps5 
                                             ON mps5.mps5_school_id = mcs.mcs_school_id
+                                            AND mps5.mps5_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps5.mps5_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps5.mps5_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps5.mps5_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps5.mps5_sub2_id = mcs.mcs_sub2_id))
                                             AND mps5.mps5_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1880,7 +2068,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1895,6 +2082,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools6 AS mps6 
                                             ON mps6.mps6_school_id = mcs.mcs_school_id
+                                            AND mps6.mps6_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps6.mps6_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps6.mps6_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps6.mps6_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps6.mps6_sub2_id = mcs.mcs_sub2_id))
                                             AND mps6.mps6_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1903,7 +2095,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1918,6 +2109,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools7 AS mps7 
                                             ON mps7.mps7_school_id = mcs.mcs_school_id
+                                            AND mps7.mps7_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps7.mps7_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps7.mps7_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps7.mps7_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps7.mps7_sub2_id = mcs.mcs_sub2_id))
                                             AND mps7.mps7_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1926,7 +2122,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1941,6 +2136,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools8 AS mps8 
                                             ON mps8.mps8_school_id = mcs.mcs_school_id
+                                            AND mps8.mps8_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps8.mps8_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps8.mps8_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps8.mps8_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps8.mps8_sub2_id = mcs.mcs_sub2_id))
                                             AND mps8.mps8_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1949,7 +2149,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1964,6 +2163,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools9 AS mps9 
                                             ON mps9.mps9_school_id = mcs.mcs_school_id
+                                            AND mps9.mps9_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps9.mps9_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps9.mps9_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps9.mps9_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps9.mps9_sub2_id = mcs.mcs_sub2_id))
                                             AND mps9.mps9_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1972,7 +2176,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
@@ -1986,6 +2189,11 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools10 AS mps10 
                                             ON mps10.mps10_school_id = mcs.mcs_school_id
+                                            AND mps10.mps10_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mps10.mps10_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mps10.mps10_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mps10.mps10_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mps10.mps10_sub2_id = mcs.mcs_sub2_id))
                                             AND mps10.mps10_status = "A" 
                                             AND mcs.mcs_status = "A"
                                           INNER JOIN clients
@@ -1994,7 +2202,6 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                            
                                           ORDER BY mcs.mcs_id');
 
 	}catch (Exception $e){
