@@ -21,7 +21,7 @@ if(isset($error_message)){
 ?>
 <html>
 	<body>
-		<table>
+		<table class="table table-bordered table-warning table-hover">
 			<tr>
 				<th>Record Id</th>
 				<th>EC Number</th>
@@ -44,7 +44,7 @@ if(isset($error_message)){
         '<td>'.ucwords(strtolower($item['subject2'])).'</td>';
         echo '<td><form method="post" action="current_schools_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
         echo '<input type="hidden" value="'.$item['mcs_id'].'" name="delete"/>';
-        echo '<input type="submit" value="Delete"/>';
+        echo '<input type="submit" class="btn btn-danger" value="Delete"/>';
         echo '</form>';
         echo '</td></tr>';
 			}
