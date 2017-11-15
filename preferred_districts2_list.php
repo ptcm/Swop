@@ -21,7 +21,7 @@ if(isset($error_message)){
 ?>
 <html>
 	<body>
-		<table class="table table-responsive-sm table-warning table-hover">
+		<table class="table table-bordered table-warning table-hover">
 
 			<tr>
 
