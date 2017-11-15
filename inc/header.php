@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>SwopMatch Handler</title>
-    <!-- bootstrap css -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/custom.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-<body id="home" data-spy="scroll" data-target=".navbar" data-offset="100">
+<body>
 
-<!-- navbar -->
-
-<nav class="nav nav-pills flex-column flex-sm-row">
-    <a class="flex-sm-fill text-sm-center nav-link active" href="#">Home</a>
-    <a class="flex-sm-fill text-sm-center nav-link active" href="Account_manage.php" target = "_blank">My Account</a>
-    <a class="flex-sm-fill text-sm-center nav-link active" href="suggest.php" target = "_blank">Suggest</a>
-    <a class="flex-sm-fill text-sm-center nav-link active" href="reports.php" target = "_blank">Reports</a>
-    <a class="flex-sm-fill text-sm-center nav-link active" href="contact.php" target = "_blank">Contact</a>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">SwopMatchHandler</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="index.php" class="text-primary">Home</a></li>
+            <li><a href="Account_manage.php" class="text-primary">My Account</a></li>
+            <li><a href="suggest.php" class="text-primary">Suggest</a></li>
+            <li><a href="reports.php" class="text-primary">Reports</a></li>
+            <li><a href="contact.php" class="text-danger">contact</a></li>
+        </ul>
+    </div>
 </nav>
-<!-- /navbar -->
+
