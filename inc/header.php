@@ -12,15 +12,15 @@
 
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">SwopMatchHandler</a>
+        <div class="btn-group btn-group-justified">
+            <a class="navbar-brand"  href="#">SwopMatchHandler</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="active"><a href="index.php" class="text-primary">Home</a></li>
             <li><a href="Account_manage.php" class="text-primary">My Account</a></li>
             <li><a href="suggest.php" class="text-primary">Suggest</a></li>
             <li><a href="reports.php" class="text-primary">Reports</a></li>
-            <li><a href="contact.php" class="text-danger">contact</a></li>
+            <li><a href="contact.php" class="text-primary">contact</a></li>
         </ul>
     </div>
 </nav>
