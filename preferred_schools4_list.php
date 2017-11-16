@@ -23,17 +23,18 @@ if(isset($error_message)){
 	<body>
     <table class="table table-bordered table-warning table-hover">
 			<tr>
+
 				<th>Record Id</th>
 				<th>EC Number</th>
 				<th>School Name</th>
 				</tr>
 			<?php
-			foreach (get_pref_schools4_list() as $item){
-				echo '<tr><td>'.$item['mps4_id'].'</td>'.
-				'<td>'.strtoupper($item['mps4_client_ec_no']).'</td>'.
+			foreach (get_pref_schools5_list() as $item){
+				echo '<tr><td>'.$item['mps5_id'].'</td>'.
+				'<td>'.strtoupper($item['mps5_client_ec_no']).'</td>'.
 				'<td>'.ucwords(strtolower($item['school_name'])).'</td>';
-        echo '<td><form method="post" action="preferred_schools4_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
-        echo '<input type="hidden" value="'.$item['mps4_id'].'" name="delete"/>';
+        echo '<td><form method="post" action="preferred_schools5_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
+        echo '<input type="hidden" value="'.$item['mps5_id'].'" name="delete"/>';
         echo '<input type="submit" class="btn btn-danger" value="Delete"/>';
         echo '</form>';
         echo '</td></tr>';
