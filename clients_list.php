@@ -21,7 +21,7 @@ if(isset($error_message)){
 ?>
 <html>
 	<body>
-		<table>
+    <table class="table table-bordered table-warning table-hover">
 			<tr>
 				<th>ID Number</th>
         <th>EC Number</th>
@@ -50,7 +50,7 @@ if(isset($error_message)){
 				'<td>'.$item['client_date_matched'].'</td>';
         echo '<td><form method="post" action="clients_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
         echo '<input type="hidden" value="'.$item['client_ec_no'].'" name="delete"/>';
-        echo '<input type="submit" value="Delete"/>';
+        echo '<input type="submit" class="btn btn-danger" value="Delete"/>';
         echo '</form>';
         echo '</td></tr>';
 			}
