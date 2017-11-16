@@ -3,10 +3,10 @@ include 'inc/header.php';
 include 'inc/functions.php';
 
 if(isset($_POST['delete'])){
-  if(delete_pref_province(filter_input(INPUT_POST, 'delete', FILTER_SANITIZE_STRING))){
-    header('Location:preferred_provinces_list.php?msg=Province+Deleted');
+  if(delete_pref_district(filter_input(INPUT_POST, 'delete', FILTER_SANITIZE_STRING))){
+    header('Location:preferred_districts_list.php?msg=Preferred+District+Deleted');
   }else{
-    header('Location:preferred_provinces_list.php?msg=Unable+to+delete+province');
+    header('Location:preferred_districts_list.php?msg=Unable+to+delete+district');
     exit;
   }
 }
@@ -21,21 +21,21 @@ if(isset($error_message)){
 ?>
 <html>
 	<body>
-		<table class="table table-responsive-sm table-warning table-hover>
+    <table class="table table-bordered table-warning table-hover">
 			<tr>
-                <th scope="col">#</th>
-				<th scope="col>Record Id</th>
-				<th scope="col>EC Number</th>
-				<th scope="col>Province Name</th>
+
+				<th>Record Id</th>
+				<th>EC Number</th>
+				<th>District Name</th>
 				</tr>
 			<?php
-			foreach (get_pref_provinces_list() as $item){
-				echo '<tr><td>'.$item['mpp_id'].'</td>'.
-				'<td>'.strtoupper($item['mpp_client_ec_no']).'</td>'.
-				'<td>'.ucwords(strtolower($item['province_name'])).'</td>';
-        echo '<td><form method="post" action="preferred_provinces_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
-        echo '<input type="hidden" value="'.$item['mpp_id'].'" name="delete"/>';
-        echo '<input type="submit" class="btn btn-outline-danger" value="Delete"/>';
+			foreach (get_pref_districts_list() as $item){
+				echo '<tr><td>'.$item['mpd_id'].'</td>'.
+				'<td>'.strtoupper($item['mpd_client_ec_no']).'</td>'.
+				'<td>'.ucwords(strtolower($item['distr_name'])).'</td>';
+        echo '<td><form method="post" action="preferred_districts_list.php" onsubmit="return confirm(\'Are you sure you want to delete this school?\')">';
+        echo '<input type="hidden" value="'.$item['mpd_id'].'" name="delete"/>';
+        echo '<input type="submit" class="btn btn-danger" value="Delete"/>';
         echo '</form>';
         echo '</td></tr>';
 			}
