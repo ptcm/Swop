@@ -773,17 +773,21 @@ if (empty($error_message) && isset($_POST["preferred_district2"]) && (($_POST["l
 if (empty($error_message) && isset($_POST["preferred_location1"]) && (($_POST["level_taught"] == "High School - Up To O Level")||
 											($_POST["level_taught"] == "High School - Up To A Level"))){
 		include_once('inc/selected_subs.php');
-		client_pref_loc1($prefLoc1_id, $ecNumber);
+		$optional = array('mpl_sub1_id'=>$sub1_id, 'mpl_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
+		client_pref_loc1($prefLoc1_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_location1"])){
-		client_pref_loc1($prefLoc1_id, $ecNumber, $levelTaught);
+		$optional = array('mpl_sub1_id'=>$sub1_id, 'mpl_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
+		client_pref_loc1($prefLoc1_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}
 
 if (empty($error_message) && isset($_POST["preferred_location2"]) && (($_POST["level_taught"] == "High School - Up To O Level")||
 											($_POST["level_taught"] == "High School - Up To A Level"))){
 		include ('inc/selected_subs.php');
-		client_pref_loc2($prefLoc2_id, $ecNumber);
+		$optional = array('mpl2_sub1_id'=>$sub1_id, 'mpl2_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
+		client_pref_loc2($prefLoc2_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_location2"]) && !empty($_POST["preferred_location1"])){
-		client_pref_loc2($prefLoc2_id, $ecNumber, $levelTaught);
+		$optional = array('mpl2_sub1_id'=>$sub1_id, 'mpl2_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
+		client_pref_loc2($prefLoc2_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_location2"]) && empty($_POST["preferred_location1"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 2 before option 1';
 	}
@@ -791,9 +795,11 @@ if (empty($error_message) && isset($_POST["preferred_location2"]) && (($_POST["l
 if (empty($error_message) && isset($_POST["preferred_location3"]) && (($_POST["level_taught"] == "High School - Up To O Level")||
 											($_POST["level_taught"] == "High School - Up To A Level"))){
 		include_once ('inc/selected_subs.php');
-		client_pref_loc3($prefLoc3_id, $ecNumber);
+		$optional = array('mpl3_sub1_id'=>$sub1_id, 'mpl3_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
+		client_pref_loc3($prefLoc3_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_location3"]) && !empty($_POST["preferred_location2"])){
-		client_pref_loc3($prefLoc3_id, $ecNumber, $levelTaught);
+		$optional = array('mpl3_sub1_id'=>$sub1_id, 'mpl3_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
+		client_pref_loc3($prefLoc3_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_location3"]) && empty($_POST["preferred_location2"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 3 before option 2';
 	}
@@ -802,10 +808,10 @@ if (empty($error_message) && isset($_POST["preferred_schools1"]) && (($_POST["le
 											($_POST["level_taught"] == "High School - Up To A Level"))){ 
 		include_once('inc/selected_subs.php');  //included if level taught is high school and there hasn't been any error in previous procedures
     $optional = array('mps_sub1_id'=>$sub1_id, 'mps_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught, $optional);  //creates a record in the 'match_pref_schools' database
+		client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught, $currSch_id, $optional);  //creates a record in the 'match_pref_schools' database
 	}else if (empty($error_message) && !empty($_POST["preferred_schools1"])){
     $optional = array('mps_sub1_id'=>$sub1_id, 'mps_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught, $optional);  //creates a record in the 'match_pref_schools' database
+		client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught, $currSch_id, $optional);  //creates a record in the 'match_pref_schools' database
 	}
 
 if (empty($error_message) && isset($_POST["preferred_schools2"]) && (($_POST["level_taught"] == "High School - Up To O Level") ||
@@ -813,10 +819,10 @@ if (empty($error_message) && isset($_POST["preferred_schools2"]) && (($_POST["le
 											&& (!empty($_POST["preferred_schools1"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps2_sub1_id'=>$sub1_id, 'mps2_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch2($prefSchool2_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch2($prefSchool2_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools2"]) && !empty($_POST["preferred_schools1"])){
     $optional = array('mps2_sub1_id'=>$sub1_id, 'mps2_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch2($prefSchool2_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch2($prefSchool2_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools2"]) && empty($_POST["preferred_schools1"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 2 before option 1';
 	}
@@ -826,10 +832,10 @@ if (empty($error_message) && isset($_POST["preferred_schools3"]) && (($_POST["le
 											&& (!empty($_POST["preferred_schools2"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps3_sub1_id'=>$sub1_id, 'mps3_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools3"]) && !empty($_POST["preferred_schools2"])){
     $optional = array('mps3_sub1_id'=>$sub1_id, 'mps3_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-	client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught, $optional);
+	client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools3"]) && empty($_POST["preferred_schools2"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 3 before option 2';
 	}
@@ -839,10 +845,10 @@ if (empty($error_message) && isset($_POST["preferred_schools4"]) && (($_POST["le
 											 && (!empty($_POST["preferred_schools3"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps4_sub1_id'=>$sub1_id, 'mps4_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools4"]) && !empty($_POST["preferred_schools3"])){
     $optional = array('mps4_sub1_id'=>$sub1_id, 'mps4_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools4"]) && empty($_POST["preferred_schools3"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 4 before option 3';
 	}
@@ -852,10 +858,10 @@ if (empty($error_message) && isset($_POST["preferred_schools5"]) && ($_POST["lev
 											 && (!empty($_POST["preferred_schools4"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps5_sub1_id'=>$sub1_id, 'mps5_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools5"]) && !empty($_POST["preferred_schools4"])){
     $optional = array('mps5_sub1_id'=>$sub1_id, 'mps5_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools5"]) && empty($_POST["preferred_schools4"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 5 before option 4';
 	}
@@ -865,10 +871,10 @@ if (empty($error_message) && isset($_POST["preferred_schools6"]) && (($_POST["le
 											 && (!empty($_POST["preferred_schools5"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps6_sub1_id'=>$sub1_id, 'mps6_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools6"]) && !empty($_POST["preferred_schools5"])){
     $optional = array('mps6_sub1_id'=>$sub1_id, 'mps6_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools6"]) && empty($_POST["preferred_schools5"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 6 before option 5';
 	}
@@ -878,10 +884,10 @@ if (empty($error_message) && isset($_POST["preferred_schools7"]) && (($_POST["le
 											 && (!empty($_POST["preferred_schools6"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps7_sub1_id'=>$sub1_id, 'mps7_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools7"]) && !empty($_POST["preferred_schools6"])){
     $optional = array('mps7_sub1_id'=>$sub1_id, 'mps7_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (!empty($_POST["preferred_schools7"]) && empty($_POST["preferred_schools6"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 7 before option 6';
 	}
@@ -891,10 +897,10 @@ if (empty($error_message) && isset($_POST["preferred_schools8"]) && (($_POST["le
 											 && (!empty($_POST["preferred_schools7"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps8_sub1_id'=>$sub1_id, 'mps8_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools8"]) && !empty($_POST["preferred_schools7"])){
     $optional = array('mps8_sub1_id'=>$sub1_id, 'mps8_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools8"]) && empty($_POST["preferred_schools7"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 8 before option 7';
 	}
@@ -904,10 +910,10 @@ if (empty($error_message) && isset($_POST["preferred_schools9"]) && (($_POST["le
 											 && (!empty($_POST["preferred_schools8"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps9_sub1_id'=>$sub1_id, 'mps9_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools9"]) && !empty($_POST["preferred_schools8"])){
     $optional = array('mps9_sub1_id'=>$sub1_id, 'mps9_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-		client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught, $optional);
+		client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools9"]) && empty($_POST["preferred_schools8"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 9 before option 8';
 	}
@@ -917,10 +923,10 @@ if (empty($error_message) && isset($_POST["preferred_schools10"]) && (($_POST["l
 											 && (!empty($_POST["preferred_schools9"]))){
 		include_once('inc/selected_subs.php');
     $optional = array('mps10_sub1_id'=>$sub1_id, 'mps10_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-	client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught, $optional);
+	client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}else if (empty($error_message) && !empty($_POST["preferred_schools10"]) && !empty($_POST["preferred_schools9"])){
     $optional = array('mps10_sub1_id'=>$sub1_id, 'mps10_sub2_id'=>$sub2_id);  //creates an array to hold optional arguments which are only relevant when the level taught is high school
-	client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught, $optional);
+	client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught, $currSch_id, $optional);
 	}elseif (empty($error_message) && !empty($_POST["preferred_schools10"]) && empty($_POST["preferred_schools9"])){
 		$error_message = 'Whoa! Invalid form input: You cannot select option 10 before option 9';
 	}
