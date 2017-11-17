@@ -726,7 +726,7 @@ function create_client($ecNumber,
        
   }
     //this function creates a record in the 'match_pref_schools' database if the EC number is not already in the system otherwise it updates the record with that EC #
-		function client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught, $optional){
+		function client_pref_sch1($prefSchool1_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
 					include ('connection.php');
 
@@ -748,32 +748,35 @@ function create_client($ecNumber,
                        (`mps_school_id`,
                         `mps_client_ec_no`,
                         `mps_client_level_taught`,
+                        `mps_curr_school_id`,
                         `mps_sub1_id`,
                         `mps_sub2_id`)
-									VALUES (?, ?, ?, ?, ?)
+									VALUES (?, ?, ?, ?, ?, ?)
                   ON DUPLICATE KEY UPDATE `mps_school_id` = VALUES(`mps_school_id`),
-                                          `mps_client_level_taught` = VALUES(`mps_client_level_taught`), 
+                                          `mps_client_level_taught` = VALUES(`mps_client_level_taught`),
+                                          `mps_curr_school_id` = VALUES(`mps_curr_school_id`),
                                            `mps_sub1_id` = VALUES(`mps_sub1_id`), 
                                            `mps_sub2_id` = VALUES(`mps_sub2_id`)';
 
-									//try {
+									try {
 										$results_school1 = $db->prepare($sql_school1);
 										$results_school1->bindValue(1, $prefSchool1_id, PDO::PARAM_INT);
 										$results_school1->bindValue(2, $ecNumber, PDO::PARAM_STR);
                     $results_school1->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                    $results_school1->bindValue(4, $optional['mps_sub1_id'], PDO::PARAM_INT);
-                    $results_school1->bindValue(5, $optional['mps_sub2_id'], PDO::PARAM_INT);
+                    $results_school1->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                    $results_school1->bindValue(5, $optional['mps_sub1_id'], PDO::PARAM_INT);
+                    $results_school1->bindValue(6, $optional['mps_sub2_id'], PDO::PARAM_INT);
 										$results_school1->execute();
-									/*} catch (Exception $e) {
+									} catch (Exception $e) {
 										echo "Error!: " . $e->getMessage() . "<br />";
 										return false;
-									}*/
+									}
 									return true;
           
     }
     
     //this function creates a record in the 'match_pref_schools2' database if the EC number is not already in the system otherwise it updates the record with that EC #
-    function client_pref_sch2($prefSchool2_id, $ecNumber, $levelTaught, $optional){
+    function client_pref_sch2($prefSchool2_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -781,11 +784,13 @@ function create_client($ecNumber,
                            (`mps2_school_id`,
                             `mps2_client_ec_no`,
                             `mps2_client_level_taught`,
+                            `mps2_curr_school_id`,
                             `mps2_sub1_id`,
                             `mps2_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps2_school_id` = VALUES(`mps2_school_id`),
                                               `mps2_client_level_taught` = VALUES(`mps2_client_level_taught`), 
+                                              `mps2_curr_school_id` = VALUES(`mps2_curr_school_id`),
                                                `mps2_sub1_id` = VALUES(`mps2_sub1_id`), 
                                                `mps2_sub2_id` = VALUES(`mps2_sub2_id`)';
 
@@ -794,8 +799,9 @@ function create_client($ecNumber,
                         $results_school2->bindValue(1, $prefSchool2_id, PDO::PARAM_INT);
                         $results_school2->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school2->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school2->bindValue(4, $optional['mps2_sub1_id'], PDO::PARAM_INT);
-                        $results_school2->bindValue(5, $optional['mps2_sub2_id'], PDO::PARAM_INT);
+                        $results_school2->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school2->bindValue(5, $optional['mps2_sub1_id'], PDO::PARAM_INT);
+                        $results_school2->bindValue(6, $optional['mps2_sub2_id'], PDO::PARAM_INT);
                         $results_school2->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -806,7 +812,7 @@ function create_client($ecNumber,
                 }
       
       //this function creates a record in the 'match_pref_schools3' database if the EC number is not already in the system otherwise it updates the record with that EC #
-			function client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught, $optional){
+			function client_pref_sch3($prefSchool3_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -814,11 +820,13 @@ function create_client($ecNumber,
                            (`mps3_school_id`,
                             `mps3_client_ec_no`,
                             `mps3_client_level_taught`,
+                            `mps3_curr_school_id`,
                             `mps3_sub1_id`,
                             `mps3_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps3_school_id` = VALUES(`mps3_school_id`),
-                                              `mps3_client_level_taught` = VALUES(`mps3_client_level_taught`), 
+                                              `mps3_client_level_taught` = VALUES(`mps3_client_level_taught`),
+                                               `mps3_curr_school_id` = VALUES(`mps3_curr_school_id`),
                                                `mps3_sub1_id` = VALUES(`mps3_sub1_id`), 
                                                `mps3_sub2_id` = VALUES(`mps3_sub2_id`)';
 
@@ -827,8 +835,9 @@ function create_client($ecNumber,
                         $results_school3->bindValue(1, $prefSchool3_id, PDO::PARAM_INT);
                         $results_school3->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school3->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school3->bindValue(4, $optional['mps3_sub1_id'], PDO::PARAM_INT);
-                        $results_school3->bindValue(5, $optional['mps3_sub2_id'], PDO::PARAM_INT);
+                        $results_school3->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school3->bindValue(5, $optional['mps3_sub1_id'], PDO::PARAM_INT);
+                        $results_school3->bindValue(6, $optional['mps3_sub2_id'], PDO::PARAM_INT);
                         $results_school3->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -839,7 +848,7 @@ function create_client($ecNumber,
                 }
     
       //this function creates a record in the 'match_pref_schools4' database if the EC number is not already in the system otherwise it updates the record with that EC #
-			function client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught, $optional){
+			function client_pref_sch4($prefSchool4_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -847,11 +856,13 @@ function create_client($ecNumber,
                            (`mps4_school_id`,
                             `mps4_client_ec_no`,
                             `mps4_client_level_taught`,
+                            `mps4_curr_school_id`,
                             `mps4_sub1_id`,
                             `mps4_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps4_school_id` = VALUES(`mps4_school_id`),
                                               `mps4_client_level_taught` = VALUES(`mps4_client_level_taught`), 
+                                              `mps4_curr_school_id` = VALUES(`mps4_curr_school_id`),
                                                `mps4_sub1_id` = VALUES(`mps4_sub1_id`), 
                                                `mps4_sub2_id` = VALUES(`mps4_sub2_id`)';
 
@@ -860,8 +871,9 @@ function create_client($ecNumber,
                         $results_school4->bindValue(1, $prefSchool4_id, PDO::PARAM_INT);
                         $results_school4->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school4->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school4->bindValue(4, $optional['mps4_sub1_id'], PDO::PARAM_INT);
-                        $results_school4->bindValue(5, $optional['mps4_sub2_id'], PDO::PARAM_INT);
+                        $results_school4->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school4->bindValue(5, $optional['mps4_sub1_id'], PDO::PARAM_INT);
+                        $results_school4->bindValue(6, $optional['mps4_sub2_id'], PDO::PARAM_INT);
                         $results_school4->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -872,7 +884,7 @@ function create_client($ecNumber,
                 }
       
       //this function creates a record in the 'match_pref_schools5' database if the EC number is not already in the system otherwise it updates the record with that EC #
-			function client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught, $optional){
+			function client_pref_sch5($prefSchool5_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -880,11 +892,13 @@ function create_client($ecNumber,
                            (`mps5_school_id`,
                             `mps5_client_ec_no`,
                             `mps5_client_level_taught`,
+                            `mps5_curr_school_id`,
                             `mps5_sub1_id`,
                             `mps5_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps5_school_id` = VALUES(`mps5_school_id`),
                                               `mps5_client_level_taught` = VALUES(`mps5_client_level_taught`), 
+                                              `mps5_curr_school_id` = VALUES(`mps5_curr_school_id`),
                                                `mps5_sub1_id` = VALUES(`mps5_sub1_id`), 
                                                `mps5_sub2_id` = VALUES(`mps5_sub2_id`)';
 
@@ -893,8 +907,9 @@ function create_client($ecNumber,
                         $results_school5->bindValue(1, $prefSchool5_id, PDO::PARAM_INT);
                         $results_school5->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school5->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school5->bindValue(4, $optional['mps5_sub1_id'], PDO::PARAM_INT);
-                        $results_school5->bindValue(5, $optional['mps5_sub2_id'], PDO::PARAM_INT);
+                        $results_school5->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school5->bindValue(5, $optional['mps5_sub1_id'], PDO::PARAM_INT);
+                        $results_school5->bindValue(6, $optional['mps5_sub2_id'], PDO::PARAM_INT);
                         $results_school5->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -906,7 +921,7 @@ function create_client($ecNumber,
       
 
 			//this function creates a record in the 'match_pref_schools6' database if the EC number is not already in the system otherwise it updates the record with that EC #
-      function client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught, $optional){
+      function client_pref_sch6($prefSchool6_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -914,11 +929,13 @@ function create_client($ecNumber,
                            (`mps6_school_id`,
                             `mps6_client_ec_no`,
                             `mps6_client_level_taught`,
+                            `mps6_curr_school_id`,
                             `mps6_sub1_id`,
                             `mps6_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps6_school_id` = VALUES(`mps6_school_id`),
                                               `mps6_client_level_taught` = VALUES(`mps6_client_level_taught`), 
+                                              `mps6_curr_school_id` = VALUES(`mps6_curr_school_id`),
                                                `mps6_sub1_id` = VALUES(`mps6_sub1_id`), 
                                                `mps6_sub2_id` = VALUES(`mps6_sub2_id`)';
 
@@ -927,8 +944,9 @@ function create_client($ecNumber,
                         $results_school6->bindValue(1, $prefSchool6_id, PDO::PARAM_INT);
                         $results_school6->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school6->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school6->bindValue(4, $optional['mps6_sub1_id'], PDO::PARAM_INT);
-                        $results_school6->bindValue(5, $optional['mps6_sub2_id'], PDO::PARAM_INT);
+                        $results_school6->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school6->bindValue(5, $optional['mps6_sub1_id'], PDO::PARAM_INT);
+                        $results_school6->bindValue(6, $optional['mps6_sub2_id'], PDO::PARAM_INT);
                         $results_school6->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -940,7 +958,7 @@ function create_client($ecNumber,
       
 
     //this function creates a record in the 'match_pref_schools7' database if the EC number is not already in the system otherwise it updates the record with that EC #
-		function client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught, $optional){
+		function client_pref_sch7($prefSchool7_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -948,11 +966,13 @@ function create_client($ecNumber,
                            (`mps7_school_id`,
                             `mps7_client_ec_no`,
                             `mps7_client_level_taught`,
+                            `mps7_curr_school_id`,
                             `mps7_sub1_id`,
                             `mps7_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps7_school_id` = VALUES(`mps7_school_id`),
                                               `mps7_client_level_taught` = VALUES(`mps7_client_level_taught`), 
+                                              `mps7_curr_school_id` = VALUES(`mps7_curr_school_id`),
                                                `mps7_sub1_id` = VALUES(`mps7_sub1_id`), 
                                                `mps7_sub2_id` = VALUES(`mps7_sub2_id`)';
 
@@ -961,8 +981,9 @@ function create_client($ecNumber,
                         $results_school7->bindValue(1, $prefSchool7_id, PDO::PARAM_INT);
                         $results_school7->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school7->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school7->bindValue(4, $optional['mps7_sub1_id'], PDO::PARAM_INT);
-                        $results_school7->bindValue(5, $optional['mps7_sub2_id'], PDO::PARAM_INT);
+                        $results_school7->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school7->bindValue(5, $optional['mps7_sub1_id'], PDO::PARAM_INT);
+                        $results_school7->bindValue(6, $optional['mps7_sub2_id'], PDO::PARAM_INT);
                         $results_school7->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -973,7 +994,7 @@ function create_client($ecNumber,
                 }
     
       //this function creates a record in the 'match_pref_schools8' database if the EC number is not already in the system otherwise it updates the record with that EC #
-			function client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught, $optional){
+			function client_pref_sch8($prefSchool8_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -981,11 +1002,13 @@ function create_client($ecNumber,
                            (`mps8_school_id`,
                             `mps8_client_ec_no`,
                             `mps8_client_level_taught`,
+                            `mps8_curr_school_id`,
                             `mps8_sub1_id`,
                             `mps8_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps8_school_id` = VALUES(`mps8_school_id`),
-                                              `mps8_client_level_taught` = VALUES(`mps8_client_level_taught`), 
+                                              `mps8_client_level_taught` = VALUES(`mps8_client_level_taught`),
+                                              `mps8_curr_school_id` = VALUES(`mps8_curr_school_id`),
                                                `mps8_sub1_id` = VALUES(`mps8_sub1_id`), 
                                                `mps8_sub2_id` = VALUES(`mps8_sub2_id`)';
 
@@ -994,8 +1017,9 @@ function create_client($ecNumber,
                         $results_school8->bindValue(1, $prefSchool8_id, PDO::PARAM_INT);
                         $results_school8->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school8->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school8->bindValue(4, $optional['mps8_sub1_id'], PDO::PARAM_INT);
-                        $results_school8->bindValue(5, $optional['mps8_sub2_id'], PDO::PARAM_INT);
+                        $results_school8->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school8->bindValue(5, $optional['mps8_sub1_id'], PDO::PARAM_INT);
+                        $results_school8->bindValue(6, $optional['mps8_sub2_id'], PDO::PARAM_INT);
                         $results_school8->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -1006,7 +1030,7 @@ function create_client($ecNumber,
                 }
       
     //this function creates a record in the 'match_pref_schools9' database if the EC number is not already in the system otherwise it updates the record with that EC #
-		function client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught, $optional){
+		function client_pref_sch9($prefSchool9_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -1014,11 +1038,13 @@ function create_client($ecNumber,
                            (`mps9_school_id`,
                             `mps9_client_ec_no`,
                             `mps9_client_level_taught`,
+                            `mps9_curr_school_id`,
                             `mps9_sub1_id`,
                             `mps9_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps9_school_id` = VALUES(`mps9_school_id`),
-                                              `mps9_client_level_taught` = VALUES(`mps9_client_level_taught`), 
+                                              `mps9_client_level_taught` = VALUES(`mps9_client_level_taught`),
+                                               `mps9_curr_school_id` = VALUES(`mps9_curr_school_id`),
                                                `mps9_sub1_id` = VALUES(`mps9_sub1_id`), 
                                                `mps9_sub2_id` = VALUES(`mps9_sub2_id`)';
 
@@ -1027,8 +1053,9 @@ function create_client($ecNumber,
                         $results_school9->bindValue(1, $prefSchool9_id, PDO::PARAM_INT);
                         $results_school9->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school9->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school9->bindValue(4, $optional['mps9_sub1_id'], PDO::PARAM_INT);
-                        $results_school9->bindValue(5, $optional['mps9_sub2_id'], PDO::PARAM_INT);
+                        $results_school9->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school9->bindValue(5, $optional['mps9_sub1_id'], PDO::PARAM_INT);
+                        $results_school9->bindValue(6, $optional['mps9_sub2_id'], PDO::PARAM_INT);
                         $results_school9->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -1039,7 +1066,7 @@ function create_client($ecNumber,
                 }
 		
     //this function creates a record in the 'match_pref_schools10' database if the EC number is not already in the system otherwise it updates the record with that EC #
-		function client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught, $optional){
+		function client_pref_sch10($prefSchool10_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
               include ('connection.php');
 
@@ -1047,11 +1074,13 @@ function create_client($ecNumber,
                            (`mps10_school_id`,
                             `mps10_client_ec_no`,
                             `mps10_client_level_taught`,
+                            `mps10_curr_school_id`,
                             `mps10_sub1_id`,
                             `mps10_sub2_id`)
-                      VALUES (?, ?, ?, ?, ?)
+                      VALUES (?, ?, ?, ?, ?, ?)
                       ON DUPLICATE KEY UPDATE `mps10_school_id` = VALUES(`mps10_school_id`),
-                                              `mps10_client_level_taught` = VALUES(`mps10_client_level_taught`), 
+                                              `mps10_client_level_taught` = VALUES(`mps10_client_level_taught`),
+                                               `mps10_curr_school_id` = VALUES(`mps10_curr_school_id`),
                                                `mps10_sub1_id` = VALUES(`mps10_sub1_id`), 
                                                `mps10_sub2_id` = VALUES(`mps10_sub2_id`)';
 
@@ -1060,8 +1089,9 @@ function create_client($ecNumber,
                         $results_school10->bindValue(1, $prefSchool10_id, PDO::PARAM_INT);
                         $results_school10->bindValue(2, $ecNumber, PDO::PARAM_STR);
                         $results_school10->bindValue(3, $levelTaught, PDO::PARAM_STR);
-                        $results_school10->bindValue(4, $optional['mps10_sub1_id'], PDO::PARAM_INT);
-                        $results_school10->bindValue(5, $optional['mps10_sub2_id'], PDO::PARAM_INT);
+                        $results_school10->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                        $results_school10->bindValue(5, $optional['mps10_sub1_id'], PDO::PARAM_INT);
+                        $results_school10->bindValue(6, $optional['mps10_sub2_id'], PDO::PARAM_INT);
                         $results_school10->execute();
                       } catch (Exception $e) {
                         echo "Error!: " . $e->getMessage() . "<br />";
@@ -1072,73 +1102,109 @@ function create_client($ecNumber,
                 }
 		
 
-		function client_pref_loc1($prefLocation1_id, $ecNumber){
+		function client_pref_loc1($prefLocation1_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
 				include ('connection.php');
 
 				$sql_location1 = 'INSERT INTO match_pref_locations
-											(mpl_loc_id,
-											mpl_client_ec_no)
-										VALUES (?, ?)
-                    ON DUPLICATE KEY UPDATE mpl_loc_id ='.$prefLocation1_id;
+                           (`mpl_loc_id`,
+                            `mpl_client_ec_no`,
+                            `mpl_client_level_taught`,
+                            `mpl_curr_school_id`,
+                            `mpl_sub1_id`,
+                            `mpl_sub2_id`)
+										VALUES (?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE `mpl_loc_id` = VALUES(`mpl_loc_id`),
+                                            `mpl_client_level_taught` = VALUES(`mpl_client_level_taught`),
+                                             `mpl_curr_school_id` = VALUES(`mpl_curr_school_id`),
+                                             `mpl_sub1_id` = VALUES(`mpl_sub1_id`), 
+                                             `mpl_sub2_id` = VALUES(`mpl_sub2_id`)';
 
-										try {
+										//try {
 										$results_location1 = $db->prepare($sql_location1);
 										$results_location1->bindValue(1, $prefLocation1_id, PDO::PARAM_INT);
 										$results_location1->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                    $results_location1->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                    $results_location1->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                    $results_location1->bindValue(5, $optional['mpl_sub1_id'], PDO::PARAM_INT);
+                    $results_location1->bindValue(6, $optional['mpl_sub2_id'], PDO::PARAM_INT);
 										$results_location1->execute();
-									} catch (Exception $e) {
+								/*	} catch (Exception $e) {
 										echo "Error!: " . $e->getMessage() . "<br />";
 										return false;
-									}
+									}*/
 									return true;
 
         }
     
 
-		function client_pref_loc2($prefLocation2_id, $ecNumber){
+		function client_pref_loc2($prefLocation2_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
 				include ('connection.php');
 
 				$sql_location2 = 'INSERT INTO match_pref_locations2
-											(mpl2_loc_id,
-											mpl2_client_ec_no)
-										VALUES (?, ?)
-                    ON DUPLICATE KEY UPDATE mpl2_loc_id ='.$prefLocation2_id;
+                           (`mpl2_loc_id`,
+                            `mpl2_client_ec_no`,
+                            `mpl2_client_level_taught`,
+                            `mpl2_curr_school_id`,
+                            `mpl2_sub1_id`,
+                            `mpl2_sub2_id`)
+										VALUES (?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE `mpl2_loc_id` = VALUES(`mpl2_loc_id`),
+                                            `mpl2_client_level_taught` = VALUES(`mpl2_client_level_taught`),
+                                             `mpl2_curr_school_id` = VALUES(`mpl2_curr_school_id`),
+                                             `mpl2_sub1_id` = VALUES(`mpl2_sub1_id`), 
+                                             `mpl2_sub2_id` = VALUES(`mpl2_sub2_id`)';
 
-										try {
+										//try {
 										$results_location2 = $db->prepare($sql_location2);
 										$results_location2->bindValue(1, $prefLocation2_id, PDO::PARAM_INT);
 										$results_location2->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                    $results_location2->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                    $results_location2->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                    $results_location2->bindValue(5, $optional['mpl2_sub1_id'], PDO::PARAM_INT);
+                    $results_location2->bindValue(6, $optional['mpl2_sub2_id'], PDO::PARAM_INT);
 										$results_location2->execute();
-									} catch (Exception $e) {
+									/*} catch (Exception $e) {
 										echo "Error!: " . $e->getMessage() . "<br />";
 										return false;
-									}
+									}*/
 									return true;
 
           }
     
 
-		function client_pref_loc3($prefLocation3_id, $ecNumber){
+		function client_pref_loc3($prefLocation3_id, $ecNumber, $levelTaught, $currSch_id, $optional){
 
 				include ('connection.php');
 
 				$sql_location3 = 'INSERT INTO match_pref_locations3
-											(mpl3_loc_id,
-											mpl3_client_ec_no)
-										VALUES (?, ?)
-                    ON DUPLICATE KEY UPDATE mpl3_loc_id ='.$prefLocation3_id;
+                           (`mpl3_loc_id`,
+                            `mpl3_client_ec_no`,
+                            `mpl3_client_level_taught`,
+                            `mpl3_curr_school_id`,
+                            `mpl3_sub1_id`,
+                            `mpl3_sub2_id`)
+										VALUES (?, ?, ?, ?, ?, ?)
+                    ON DUPLICATE KEY UPDATE `mpl3_loc_id` = VALUES(`mpl3_loc_id`),
+                                            `mpl3_client_level_taught` = VALUES(`mpl3_client_level_taught`),
+                                             `mpl3_curr_school_id` = VALUES(`mpl3_curr_school_id`),
+                                             `mpl3_sub1_id` = VALUES(`mpl3_sub1_id`), 
+                                             `mpl3_sub2_id` = VALUES(`mpl3_sub2_id`)';
 
-										try {
+										//try {
 										$results_location3 = $db->prepare($sql_location3);
 										$results_location3->bindValue(1, $prefLocation3_id, PDO::PARAM_INT);
 										$results_location3->bindValue(2, $ecNumber, PDO::PARAM_STR);
+                    $results_location3->bindValue(3, $levelTaught, PDO::PARAM_STR);
+                    $results_location3->bindValue(4, $currSch_id, PDO::PARAM_INT);
+                    $results_location3->bindValue(5, $optional['mpl3_sub1_id'], PDO::PARAM_INT);
+                    $results_location3->bindValue(6, $optional['mpl3_sub2_id'], PDO::PARAM_INT);
 										$results_location3->execute();
-									} catch (Exception $e) {
+									/*} catch (Exception $e) {
 										echo "Error!: " . $e->getMessage() . "<br />";
 										return false;
-									}
+									}*/
 									return true;
 
       }
@@ -1882,9 +1948,9 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 
 	}
 	$matched_curr_schools = $results_curr_school->fetchAll(PDO::FETCH_ASSOC); 
- /*
+ 
   try{
-    $results_pref_school1 = $db->query("SELECT mps.mps_client_ec_no,mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.Pref_ID
+    $results_pref_school1 = $db->query("SELECT mps.mps_client_ec_no,mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id
                                       FROM match_current_schools AS mcs
                                       INNER JOIN match_pref_schools AS mps
                                           ON mps.mps_school_id = mcs.mcs_school_id
@@ -1896,40 +1962,87 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                           AND mps.mps_status = 'A' 
                                           AND mcs.mcs_status = 'A'
                                       INNER JOIN
-                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS Pref_ID
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
                                               FROM match_pref_schools
                                               UNION ALL
-                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
                                               FROM match_pref_schools2
                                               UNION ALL
-                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
                                               FROM match_pref_schools3
                                               UNION ALL
-                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
                                               FROM match_pref_schools4
                                               UNION ALL
-                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
                                               FROM match_pref_schools5
                                               UNION ALL
-                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
                                               FROM match_pref_schools6
                                               UNION ALL
-                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
                                               FROM match_pref_schools7
                                               UNION ALL
-                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
                                               FROM match_pref_schools8
                                               UNION ALL
-                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
                                               FROM match_pref_schools9
                                               UNION ALL
-                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id AS Pref_ID
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
                                               FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
                                               ) AS co_prefs
                                               ON mcs.mcs_client_ec_no = co_prefs.EC_NO
-                                      INNER JOIN clients
-                                          ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                          AND clients.client_status = 'A'
+                                              AND mps.mps_curr_school_id = co_prefs.pref_id
                                       WHERE mcs.mcs_id IN (
                                           SELECT MIN(mcs.mcs_id) 
                                           FROM match_current_schools AS mcs
@@ -1942,36 +2055,9 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
   
 	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC);
-   */ 
    
-   try{
-    $results_pref_school1 = $db->query("SELECT mps.mps_client_ec_no,mcs.mcs_client_ec_no
-                                      FROM match_current_schools AS mcs
-                                      INNER JOIN match_pref_schools AS mps
-                                          ON mps.mps_school_id = mcs.mcs_school_id
-                                          AND mps.mps_client_level_taught = mcs.mcs_client_level_taught
-                                          AND ((mps.mps_sub1_id = mcs.mcs_sub1_id) 
-                                          OR (mps.mps_sub1_id = mcs.mcs_sub2_id)
-                                          OR (mps.mps_sub2_id = mcs.mcs_sub1_id)
-                                          OR (mps.mps_sub2_id = mcs.mcs_sub2_id))
-                                          AND mps.mps_status = 'A' 
-                                          AND mcs.mcs_status = 'A'
-                                      INNER JOIN clients
-                                          ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                          AND clients.client_status = 'A'
-                                      WHERE mcs.mcs_id IN (
-                                          SELECT MIN(mcs.mcs_id) 
-                                          FROM match_current_schools AS mcs
-                                          GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id");
-	}catch (Exception $e){
-			echo 'Failed to retrieve matched preferred school1';
-			exit;
-
-	}
-  
-	$matched_schools1 = $results_pref_school1->fetchAll(PDO::FETCH_ASSOC);
- try{$results_pref_school2 = $db->query('SELECT mps2.mps2_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+ try{
+   $results_pref_school2 = $db->query("SELECT mps2.mps2_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools2 AS mps2 
                                             ON mps2.mps2_school_id = mcs.mcs_school_id
@@ -1980,15 +2066,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps2.mps2_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps2.mps2_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps2.mps2_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps2.mps2_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps2.mps2_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps2.mps2_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school2';
@@ -1997,7 +2162,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_schools2 = $results_pref_school2->fetchAll(PDO::FETCH_ASSOC); 
 
- try{$results_pref_school3 = $db->query('SELECT mps3.mps3_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+ try{$results_pref_school3 = $db->query("SELECT mps3.mps3_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools3 AS mps3 
                                             ON mps3.mps3_school_id = mcs.mcs_school_id
@@ -2006,15 +2171,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps3.mps3_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps3.mps3_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps3.mps3_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps3.mps3_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps3.mps3_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps3.mps3_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school3';
@@ -2024,7 +2268,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools3 = $results_pref_school3->fetchAll(PDO::FETCH_ASSOC);  
   
   
-  try{$results_pref_school4 = $db->query('SELECT mps4.mps4_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_school4 = $db->query("SELECT mps4.mps4_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools4 AS mps4 
                                             ON mps4.mps4_school_id = mcs.mcs_school_id
@@ -2033,15 +2277,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps4.mps4_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps4.mps4_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps4.mps4_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps4.mps4_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps4.mps4_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps4.mps4_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school4';
@@ -2051,7 +2374,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools4 = $results_pref_school4->fetchAll(PDO::FETCH_ASSOC);  
  
  
- try{$results_pref_school5 = $db->query('SELECT mps5.mps5_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+ try{$results_pref_school5 = $db->query("SELECT mps5.mps5_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools5 AS mps5 
                                             ON mps5.mps5_school_id = mcs.mcs_school_id
@@ -2060,15 +2383,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps5.mps5_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps5.mps5_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps5.mps5_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps5.mps5_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps5.mps5_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps5.mps5_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school5';
@@ -2078,7 +2480,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools5 = $results_pref_school5->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school6 = $db->query('SELECT mps6.mps6_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+ try{$results_pref_school6 = $db->query("SELECT mps6.mps6_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id  
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools6 AS mps6 
                                             ON mps6.mps6_school_id = mcs.mcs_school_id
@@ -2087,15 +2489,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps6.mps6_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps6.mps6_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps6.mps6_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps6.mps6_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps6.mps6_status = 'A'
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps6.mps6_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school6';
@@ -2105,7 +2586,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools6 = $results_pref_school6->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school7 = $db->query('SELECT mps7.mps7_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+ try{$results_pref_school7 = $db->query("SELECT mps7.mps7_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools7 AS mps7 
                                             ON mps7.mps7_school_id = mcs.mcs_school_id
@@ -2114,15 +2595,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps7.mps7_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps7.mps7_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps7.mps7_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps7.mps7_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps7.mps7_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps7.mps7_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school7';
@@ -2132,7 +2692,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools7 = $results_pref_school7->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school8 = $db->query('SELECT mps8.mps8_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+ try{$results_pref_school8 = $db->query("SELECT mps8.mps8_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id  
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools8 AS mps8 
                                             ON mps8.mps8_school_id = mcs.mcs_school_id
@@ -2141,15 +2701,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps8.mps8_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps8.mps8_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps8.mps8_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps8.mps8_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps8.mps8_status = 'A'
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps8.mps8_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school8';
@@ -2159,7 +2798,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	$matched_schools8 = $results_pref_school8->fetchAll(PDO::FETCH_ASSOC); 
  
  
- try{$results_pref_school9 = $db->query('SELECT mps9.mps9_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+ try{$results_pref_school9 = $db->query("SELECT mps9.mps9_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id  
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools9 AS mps9 
                                             ON mps9.mps9_school_id = mcs.mcs_school_id
@@ -2168,15 +2807,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps9.mps9_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps9.mps9_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps9.mps9_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps9.mps9_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps9.mps9_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps9.mps9_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school9';
@@ -2185,7 +2903,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_schools9 = $results_pref_school9->fetchAll(PDO::FETCH_ASSOC);  
   
-  try{$results_pref_school10 = $db->query('SELECT mps10.mps10_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_school10 = $db->query("SELECT mps10.mps10_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.pref_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_schools10 AS mps10 
                                             ON mps10.mps10_school_id = mcs.mcs_school_id
@@ -2194,15 +2912,94 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
                                             OR (mps10.mps10_sub1_id = mcs.mcs_sub2_id)
                                             OR (mps10.mps10_sub2_id = mcs.mcs_sub1_id)
                                             OR (mps10.mps10_sub2_id = mcs.mcs_sub2_id))
-                                            AND mps10.mps10_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mps10.mps10_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, mps_school_id AS pref_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no AS EC_NO, mps2_school_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no AS EC_NO, mps3_school_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no AS EC_NO, mps4_school_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no AS EC_NO, mps5_school_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no AS EC_NO, mps6_school_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no AS EC_NO, mps7_school_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no AS EC_NO, mps8_school_id
+                                              FROM match_pref_schools8
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no AS EC_NO, mps9_school_id
+                                              FROM match_pref_schools9
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no AS EC_NO, mps10_school_id
+                                              FROM match_pref_schools10
+                                              UNION ALL
+                                              SELECT 'match_pref_locations', mpl_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations, schools
+                                              WHERE mpl_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2', mpl2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations2, schools
+                                              WHERE mpl2_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3', mpl3_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_locations3, schools
+                                              WHERE mpl3_loc_id IN(SELECT school_loc_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_towns, schools
+                                              WHERE mpt_town_id IN(SELECT school_town_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts, schools
+                                              WHERE mpd_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_districts2, schools
+                                              WHERE mpd2_distr_id IN(SELECT school_distr_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, schools.school_id
+                                              FROM match_pref_provinces, schools
+                                              WHERE mpp_province_id IN(SELECT DISTINCT school_province_id
+                                                                   FROM schools
+                                                                   INNER JOIN match_pref_schools
+                                                                   ON school_id = match_pref_schools.mps_curr_school_id)
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
+                                              AND mps10.mps10_curr_school_id = co_prefs.pref_id
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_school_id)
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched preferred school10';
@@ -2211,20 +3008,119 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_schools10 = $results_pref_school10->fetchAll(PDO::FETCH_ASSOC); 
   
-  try{$results_pref_locations1 = $db->query('SELECT mpl.mpl_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{
+    $results_pref_locations1 = $db->query("SELECT mpl.mpl_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.loc_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_locations AS mpl 
                                             ON mpl.mpl_loc_id = mcs.mcs_loc_id
-                                            AND mpl.mpl_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mpl.mpl_client_level_taught = mcs.mcs_client_level_taught
+                                            AND ((mpl.mpl_sub1_id = mcs.mcs_sub1_id) 
+                                            OR (mpl.mpl_sub1_id = mcs.mcs_sub2_id)
+                                            OR (mpl.mpl_sub2_id = mcs.mcs_sub1_id)
+                                            OR (mpl.mpl_sub2_id = mcs.mcs_sub2_id))
+                                            AND mpl.mpl_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                              FROM schools
+                                                                                                              WHERE school_id = match_pref_schools.mps_curr_school_id) AS loc_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools2.mps2_curr_school_id) AS loc_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools3.mps3_curr_school_id) AS loc_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools4.mps4_curr_school_id) AS loc_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools5.mps5_curr_school_id) AS loc_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools6.mps6_curr_school_id) AS loc_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools7.mps7_curr_school_id) AS loc_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools8.mps8_curr_school_id) AS loc_id
+                                              FROM match_pref_schools8
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools9.mps9_curr_school_id) AS loc_id
+                                              FROM match_pref_schools9
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_schools10.mps10_curr_school_id) AS loc_id
+                                              FROM match_pref_schools10
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations' AS tab, mpl_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations.mpl_curr_school_id) AS loc_id
+                                              FROM match_pref_locations
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2' AS tab, mpl2_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations2.mpl2_curr_school_id) AS loc_id
+                                              FROM match_pref_locations2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3' AS tab, mpl3_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations3.mpl3_curr_school_id) AS loc_id
+                                              FROM match_pref_locations3
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                      FROM schools
+                                                                                                      WHERE school_id = match_pref_towns.mpt_curr_school_id) AS loc_id
+                                              FROM match_pref_towns
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_districts.mpd_curr_school_id) AS loc_id
+                                              FROM match_pref_districts
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                            FROM schools
+                                                                                                            WHERE school_id = match_pref_districts2.mpd2_curr_school_id) AS loc_id
+                                              FROM match_pref_districts2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_provinces.mpp_curr_school_id) AS loc_id
+                                              FROM match_pref_provinces
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_loc_id)
                                             
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched locations1';
@@ -2233,20 +3129,113 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_locations1 = $results_pref_locations1->fetchAll(PDO::FETCH_ASSOC); 
   
-  try{$results_pref_locations2 = $db->query('SELECT mpl2.mpl2_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_locations2 = $db->query("SELECT mpl2.mpl2_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.loc_id  
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_locations2 AS mpl2 
                                             ON mpl2.mpl2_loc_id = mcs.mcs_loc_id
-                                            AND mpl2.mpl2_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mpl2.mpl2_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                              FROM schools
+                                                                                                              WHERE school_id = match_pref_schools.mps_curr_school_id) AS loc_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools2.mps2_curr_school_id) AS loc_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools3.mps3_curr_school_id) AS loc_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools4.mps4_curr_school_id) AS loc_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools5.mps5_curr_school_id) AS loc_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools6.mps6_curr_school_id) AS loc_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools7.mps7_curr_school_id) AS loc_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools8.mps8_curr_school_id) AS loc_id
+                                              FROM match_pref_schools8
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools9.mps9_curr_school_id) AS loc_id
+                                              FROM match_pref_schools9
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_schools10.mps10_curr_school_id) AS loc_id
+                                              FROM match_pref_schools10
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations' AS tab, mpl_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations.mpl_curr_school_id) AS loc_id
+                                              FROM match_pref_locations
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2' AS tab, mpl2_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations2.mpl2_curr_school_id) AS loc_id
+                                              FROM match_pref_locations2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3' AS tab, mpl3_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations3.mpl3_curr_school_id) AS loc_id
+                                              FROM match_pref_locations3
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                      FROM schools
+                                                                                                      WHERE school_id = match_pref_towns.mpt_curr_school_id) AS loc_id
+                                              FROM match_pref_towns
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_districts.mpd_curr_school_id) AS loc_id
+                                              FROM match_pref_districts
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                            FROM schools
+                                                                                                            WHERE school_id = match_pref_districts2.mpd2_curr_school_id) AS loc_id
+                                              FROM match_pref_districts2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_provinces.mpp_curr_school_id) AS loc_id
+                                              FROM match_pref_provinces
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_loc_id)
                                             
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched locations2';
@@ -2255,20 +3244,113 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_locations2 = $results_pref_locations2->fetchAll(PDO::FETCH_ASSOC); 
   
-  try{$results_pref_locations3 = $db->query('SELECT mpl3.mpl3_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_locations3 = $db->query("SELECT mpl3.mpl3_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.loc_id  
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_locations3 AS mpl3 
                                             ON mpl3.mpl3_loc_id = mcs.mcs_loc_id
-                                            AND mpl3.mpl3_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mpl3.mpl3_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                              FROM schools
+                                                                                                              WHERE school_id = match_pref_schools.mps_curr_school_id) AS loc_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools2.mps2_curr_school_id) AS loc_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools3.mps3_curr_school_id) AS loc_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools4.mps4_curr_school_id) AS loc_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools5.mps5_curr_school_id) AS loc_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools6.mps6_curr_school_id) AS loc_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools7.mps7_curr_school_id) AS loc_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools8.mps8_curr_school_id) AS loc_id
+                                              FROM match_pref_schools8
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no, (SELECT school_loc_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools9.mps9_curr_school_id) AS loc_id
+                                              FROM match_pref_schools9
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_schools10.mps10_curr_school_id) AS loc_id
+                                              FROM match_pref_schools10
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations' AS tab, mpl_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations.mpl_curr_school_id) AS loc_id
+                                              FROM match_pref_locations
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2' AS tab, mpl2_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations2.mpl2_curr_school_id) AS loc_id
+                                              FROM match_pref_locations2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3' AS tab, mpl3_client_ec_no AS EC_NO, (SELECT school_loc_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_locations3.mpl3_curr_school_id) AS loc_id
+                                              FROM match_pref_locations3
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                      FROM schools
+                                                                                                      WHERE school_id = match_pref_towns.mpt_curr_school_id) AS loc_id
+                                              FROM match_pref_towns
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_districts.mpd_curr_school_id) AS loc_id
+                                              FROM match_pref_districts
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                            FROM schools
+                                                                                                            WHERE school_id = match_pref_districts2.mpd2_curr_school_id) AS loc_id
+                                              FROM match_pref_districts2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, ( SELECT school_loc_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_provinces.mpp_curr_school_id) AS loc_id
+                                              FROM match_pref_provinces
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_loc_id)
                                             
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched locations3';
@@ -2277,20 +3359,113 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_locations3 = $results_pref_locations3->fetchAll(PDO::FETCH_ASSOC); 
   
-  try{$results_pref_districts1 = $db->query('SELECT mpd.mpd_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_districts1 = $db->query("SELECT mpd.mpd_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.distr_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_districts AS mpd 
                                             ON mpd.mpd_distr_id = mcs.mcs_distr_id
-                                            AND mpd.mpd_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mpd.mpd_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                              FROM schools
+                                                                                                              WHERE school_id = match_pref_schools.mps_curr_school_id) AS distr_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools2.mps2_curr_school_id) AS distr_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools3.mps3_curr_school_id) AS distr_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools4.mps4_curr_school_id) AS distr_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools5.mps5_curr_school_id) AS distr_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools6.mps6_curr_school_id) AS distr_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools7.mps7_curr_school_id) AS distr_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools8.mps8_curr_school_id) AS distr_id
+                                              FROM match_pref_schools8
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools9.mps9_curr_school_id) AS distr_id
+                                              FROM match_pref_schools9
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no, (SELECT school_distr_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_schools10.mps10_curr_school_id) AS distr_id
+                                              FROM match_pref_schools10
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations' AS tab, mpl_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                                FROM schools
+                                                                                                                WHERE school_id = match_pref_locations.mpl_curr_school_id) AS distr_id
+                                              FROM match_pref_locations
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2' AS tab, mpl2_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations2.mpl2_curr_school_id) AS distr_id
+                                              FROM match_pref_locations2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3' AS tab, mpl3_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations3.mpl3_curr_school_id) AS distr_id
+                                              FROM match_pref_locations3
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                      FROM schools
+                                                                                                      WHERE school_id = match_pref_towns.mpt_curr_school_id) AS distr_id
+                                              FROM match_pref_towns
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_districts.mpd_curr_school_id) AS distr_id
+                                              FROM match_pref_districts
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                            FROM schools
+                                                                                                            WHERE school_id = match_pref_districts2.mpd2_curr_school_id) AS distr_id
+                                              FROM match_pref_districts2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_provinces.mpp_curr_school_id) AS distr_id
+                                              FROM match_pref_provinces
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_distr_id)
                                             
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched districts1';
@@ -2299,20 +3474,113 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_districts1 = $results_pref_districts1->fetchAll(PDO::FETCH_ASSOC);
   
-  try{$results_pref_districts2 = $db->query('SELECT mpd2.mpd2_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_districts2 = $db->query("SELECT mpd2.mpd2_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.distr_id  
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_districts2 AS mpd2 
                                             ON mpd2.mpd2_distr_id = mcs.mcs_distr_id
-                                            AND mpd2.mpd2_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mpd2.mpd2_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                              FROM schools
+                                                                                                              WHERE school_id = match_pref_schools.mps_curr_school_id) AS distr_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools2.mps2_curr_school_id) AS distr_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools3.mps3_curr_school_id) AS distr_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools4.mps4_curr_school_id) AS distr_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools5.mps5_curr_school_id) AS distr_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools6.mps6_curr_school_id) AS distr_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools7.mps7_curr_school_id) AS distr_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools8.mps8_curr_school_id) AS distr_id
+                                              FROM match_pref_schools8
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no, (SELECT school_distr_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools9.mps9_curr_school_id) AS distr_id
+                                              FROM match_pref_schools9
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no, (SELECT school_distr_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_schools10.mps10_curr_school_id) AS distr_id
+                                              FROM match_pref_schools10
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations' AS tab, mpl_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                                FROM schools
+                                                                                                                WHERE school_id = match_pref_locations.mpl_curr_school_id) AS distr_id
+                                              FROM match_pref_locations
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2' AS tab, mpl2_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations2.mpl2_curr_school_id) AS distr_id
+                                              FROM match_pref_locations2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3' AS tab, mpl3_client_ec_no AS EC_NO, (SELECT school_distr_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations3.mpl3_curr_school_id) AS distr_id
+                                              FROM match_pref_locations3
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                      FROM schools
+                                                                                                      WHERE school_id = match_pref_towns.mpt_curr_school_id) AS distr_id
+                                              FROM match_pref_towns
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_districts.mpd_curr_school_id) AS distr_id
+                                              FROM match_pref_districts
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                            FROM schools
+                                                                                                            WHERE school_id = match_pref_districts2.mpd2_curr_school_id) AS distr_id
+                                              FROM match_pref_districts2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, ( SELECT school_distr_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_provinces.mpp_curr_school_id) AS distr_id
+                                              FROM match_pref_provinces
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_distr_id)
                                             
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched districts2';
@@ -2321,20 +3589,113 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_districts2 = $results_pref_districts2->fetchAll(PDO::FETCH_ASSOC);
   
-  try{$results_pref_towns = $db->query('SELECT mpt.mpt_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_towns = $db->query("SELECT mpt.mpt_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.town_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_towns AS mpt 
                                             ON mpt.mpt_town_id = mcs.mcs_town_id
-                                            AND mpt.mpt_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mpt.mpt_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, (SELECT school_town_id
+                                                                                                              FROM schools
+                                                                                                              WHERE school_id = match_pref_schools.mps_curr_school_id) AS town_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools2.mps2_curr_school_id) AS town_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools3.mps3_curr_school_id) AS town_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools4.mps4_curr_school_id) AS town_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools5.mps5_curr_school_id) AS town_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools6.mps6_curr_school_id) AS town_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools7.mps7_curr_school_id) AS town_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools8.mps8_curr_school_id) AS town_id
+                                              FROM match_pref_schools8
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no, (SELECT school_town_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools9.mps9_curr_school_id) AS town_id
+                                              FROM match_pref_schools9
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no, (SELECT school_town_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_schools10.mps10_curr_school_id) AS town_id
+                                              FROM match_pref_schools10
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations' AS tab, mpl_client_ec_no AS EC_NO, (SELECT school_town_id
+                                                                                                                FROM schools
+                                                                                                                WHERE school_id = match_pref_locations.mpl_curr_school_id) AS town_id
+                                              FROM match_pref_locations
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2' AS tab, mpl2_client_ec_no AS EC_NO, (SELECT school_town_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations2.mpl2_curr_school_id) AS town_id
+                                              FROM match_pref_locations2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3' AS tab, mpl3_client_ec_no AS EC_NO, (SELECT school_town_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations3.mpl3_curr_school_id) AS town_id
+                                              FROM match_pref_locations3
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, ( SELECT school_town_id
+                                                                                                      FROM schools
+                                                                                                      WHERE school_id = match_pref_towns.mpt_curr_school_id) AS town_id
+                                              FROM match_pref_towns
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, ( SELECT school_town_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_districts.mpd_curr_school_id) AS town_id
+                                              FROM match_pref_districts
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, ( SELECT school_town_id
+                                                                                                            FROM schools
+                                                                                                            WHERE school_id = match_pref_districts2.mpd2_curr_school_id) AS town_id
+                                              FROM match_pref_districts2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, ( SELECT school_town_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_provinces.mpp_curr_school_id) AS town_id
+                                              FROM match_pref_provinces
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_town_id)
                                             
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched towns';
@@ -2343,20 +3704,113 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
 	}
 	$matched_towns = $results_pref_towns->fetchAll(PDO::FETCH_ASSOC);
   
-  try{$results_pref_provinces = $db->query('SELECT mpp.mpp_client_ec_no, mcs.mcs_client_ec_no, clients.client_ec_no 
+  try{$results_pref_provinces = $db->query("SELECT mpp.mpp_client_ec_no, mcs.mcs_client_ec_no, co_prefs.tab, co_prefs.province_id 
                                           FROM match_current_schools AS mcs  
                                           INNER JOIN match_pref_provinces AS mpp 
                                             ON mpp.mpp_province_id = mcs.mcs_province_id
-                                            AND mpp.mpp_status = "A" 
-                                            AND mcs.mcs_status = "A"
-                                          INNER JOIN clients
-                                            ON mcs.mcs_client_ec_no = clients.client_ec_no
-                                            AND clients.client_status = "A"
+                                            AND mpp.mpp_status = 'A' 
+                                            AND mcs.mcs_status = 'A'
+                                      INNER JOIN
+                                            ( SELECT 'match_pref_schools' AS tab, mps_client_ec_no AS EC_NO, (SELECT school_province_id
+                                                                                                              FROM schools
+                                                                                                              WHERE school_id = match_pref_schools.mps_curr_school_id) AS province_id
+                                              FROM match_pref_schools
+                                              UNION ALL
+                                              SELECT 'match_pref_schools2', mps2_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools2.mps2_curr_school_id) AS province_id
+                                              FROM match_pref_schools2
+                                              UNION ALL
+                                              SELECT 'match_pref_schools3', mps3_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools3.mps3_curr_school_id) AS province_id
+                                              FROM match_pref_schools3
+                                              UNION ALL
+                                              SELECT 'match_pref_schools4', mps4_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools4.mps4_curr_school_id) AS province_id
+                                              FROM match_pref_schools4
+                                              UNION ALL
+                                              SELECT 'match_pref_schools5', mps5_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools5.mps5_curr_school_id) AS province_id
+                                              FROM match_pref_schools5
+                                              UNION ALL
+                                              SELECT 'match_pref_schools6', mps6_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools6.mps6_curr_school_id) AS province_id
+                                              FROM match_pref_schools6
+                                              UNION ALL
+                                              SELECT 'match_pref_schools7', mps7_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools7.mps7_curr_school_id) AS province_id
+                                              FROM match_pref_schools7
+                                              UNION ALL
+                                              SELECT 'match_pref_schools8', mps8_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools8.mps8_curr_school_id) AS province_id
+                                              FROM match_pref_schools8
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools9', mps9_client_ec_no, (SELECT school_province_id
+                                                                                                FROM schools
+                                                                                                WHERE school_id = match_pref_schools9.mps9_curr_school_id) AS province_id
+                                              FROM match_pref_schools9
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_schools10', mps10_client_ec_no, (SELECT school_province_id
+                                                                                                  FROM schools
+                                                                                                  WHERE school_id = match_pref_schools10.mps10_curr_school_id) AS province_id
+                                              FROM match_pref_schools10
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations' AS tab, mpl_client_ec_no AS EC_NO, (SELECT school_province_id
+                                                                                                                FROM schools
+                                                                                                                WHERE school_id = match_pref_locations.mpl_curr_school_id) AS province_id
+                                              FROM match_pref_locations
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations2' AS tab, mpl2_client_ec_no AS EC_NO, (SELECT school_province_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations2.mpl2_curr_school_id) AS province_id
+                                              FROM match_pref_locations2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_locations3' AS tab, mpl3_client_ec_no AS EC_NO, (SELECT school_province_id
+                                                                                                                  FROM schools
+                                                                                                                  WHERE school_id = match_pref_locations3.mpl3_curr_school_id) AS province_id
+                                              FROM match_pref_locations3
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_towns', mpt_client_ec_no AS EC_NO, ( SELECT school_province_id
+                                                                                                      FROM schools
+                                                                                                      WHERE school_id = match_pref_towns.mpt_curr_school_id) AS province_id
+                                              FROM match_pref_towns
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts', mpd_client_ec_no AS EC_NO, ( SELECT school_province_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_districts.mpd_curr_school_id) AS province_id
+                                              FROM match_pref_districts
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_districts2', mpd2_client_ec_no AS EC_NO, ( SELECT school_province_id
+                                                                                                            FROM schools
+                                                                                                            WHERE school_id = match_pref_districts2.mpd2_curr_school_id) AS province_id
+                                              FROM match_pref_districts2
+                                              
+                                              UNION ALL
+                                              SELECT 'match_pref_provinces', mpp_client_ec_no AS EC_NO, ( SELECT school_province_id
+                                                                                                          FROM schools
+                                                                                                          WHERE school_id = match_pref_provinces.mpp_curr_school_id) AS province_id
+                                              FROM match_pref_provinces
+                                              ) AS co_prefs
+                                              ON mcs.mcs_client_ec_no = co_prefs.EC_NO
                                           WHERE mcs.mcs_id IN (SELECT MIN(mcs.mcs_id) 
                                             FROM match_current_schools AS mcs 
                                             GROUP BY mcs.mcs_province_id)
                                             
-                                          ORDER BY mcs.mcs_id');
+                                          ORDER BY mcs.mcs_id");
 
 	}catch (Exception $e){
 			echo 'Failed to retrieve matched provinces';
@@ -2367,7 +3821,7 @@ try{$results_curr_school = $db->query('SELECT mcs_school_id, mcs_client_ec_no
   
   
   echo "<pre>";
-//print_r($matched_schools1).'<br>';
+//print_r($matched_locations1).'<br>';
 echo "</pre>";
 
 ?>
